@@ -106,7 +106,7 @@ const char* htmlContent = R"(<!DOCTYPE html>
     <section>
       <div class="form-box">
         <div class="form-value">
-          <form action="">
+          <form action="/form" method="post">
             <h2>Configurar red</h2>
             <div class="inputbox">
               <input type="text" name="ssid" required />
@@ -143,12 +143,17 @@ void setup() {
 
   server.on("/form", HTTP_POST, [](AsyncWebServerRequest *request){
     // Manejar los datos del formulario
-    String message;
-    if (request->hasParam("input_name", true)) {
-      message = request->getParam("input_name", true)->value();
+    String ssid;
+    String password;
+    if (request->hasParam("ssid", true)) {
+      ssid = request->getParam("ssid", true)->value();
     }
-      Serial.println(message);
-    request->send(200, "text/plain", "Mensaje recibido: " + message);
+    if (request->hasParam("password", true)) {
+      password = request->getParam("password", true)->value();
+    }
+      Serial.println(ssid);
+      Serial.println(password);
+    request->send(200, "text/plain", "SSID recibido: " + ssid + "<br> Password: " + password);
   });
 
   // Iniciar el servidor web
