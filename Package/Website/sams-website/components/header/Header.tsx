@@ -13,7 +13,7 @@ function Header() {
     <header className="text-3xl overflow-x-hidden flex py-6 justify-between md:text-lg md:items-center md:justify-around md:px-4 md:py-6 ">
       <Logo />
       <Links />
-      <Dashboard />
+      <Dashboard mobile={true} />
       {/* Only for mobile*/}
       <MenuButton menu={menu} />
       <Menu menu={menu} />
