@@ -1,6 +1,8 @@
 #include <ESPAsyncWebSrv.h>
-
+#include <LittleFS.h>
 #include <WiFi.h>
+#include "ReadFile.h"
+#include "WriteFile.h"
 
 const char* ssid = "Nodemcu_Saimon";  // Nombre de la red WiFi del punto de acceso
 const char* password = "Password1";  // Contraseña de la red WiFi del punto de acceso
@@ -126,10 +128,16 @@ const char* htmlContent = R"(<!DOCTYPE html>
 
 )";
 
+String InputSsid;
+String Inputpassword;
+
 void setup() {
   Serial.begin(115200);
-
-  // Inicializar el punto de acceso WiFi
+  
+  if (!LittleFS.begin()) {
+    Serial.println("Failed to initialize LittleFS");}
+    if(readJsonFromFile(InputSsid, Inputpassword) == false){
+   // Inicializar el punto de acceso WiFi
   WiFi.softAP(ssid, password);
   IPAddress IP = WiFi.softAPIP();
   Serial.print("Dirección IP del Punto de Acceso: ");
@@ -153,12 +161,12 @@ void setup() {
     }
       Serial.println(ssid);
       Serial.println(password);
-    request->send(200, "text/plain", "SSID recibido: " + ssid + "<br> Password: " + password);
+      writeJsonToFile(ssid, password);
   });
-
   // Iniciar el servidor web
-  server.begin();
-}
+  server.begin();}}
+
+  
 
 void loop() {
   // No se requiere ninguna lógica adicional en el loop

@@ -4,7 +4,7 @@ import { AiOutlineMenu } from "react-icons/ai";
 function MenuButton({ menu }: any) {
   const toggleMenu = () => {
     menu.current.classList.toggle("translate-x-[800px]");
-    menu.current.classList.toggle("translate-x-[0px]");
+    menu.current.classList.toggle("translate-x-[0]");
   };
 
   return (

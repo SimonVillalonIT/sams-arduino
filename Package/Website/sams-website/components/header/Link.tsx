@@ -1,8 +1,8 @@
 import React, { PropsWithChildren } from 'react'
 
-function Link({link, title}:PropsWithChildren<any>) {
+function Link({link, text,title}:any) {
   return (
-    <a>Link</a>
+    <a className='text-left' title={title} href={link}>{text}</a>
   )
 }
 

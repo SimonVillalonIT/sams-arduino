@@ -4,7 +4,7 @@ import {ImCross} from "react-icons/Im"
 function CloseMenu({ menu }: any) {
   const toggleMenu = () => {
     menu.current.classList.toggle("translate-x-[800px]");
-    menu.current.classList.toggle("translate-x-[0px]");
+    menu.current.classList.toggle("translate-x-[0]");
   };
   return <div className="absolute text-secondary top-6 right-8" onClick={toggleMenu}>
     <ImCross />

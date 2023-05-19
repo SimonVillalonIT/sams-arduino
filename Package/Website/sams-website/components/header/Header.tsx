@@ -10,12 +10,12 @@ function Header() {
   const menu = useRef(null) as any;
 
   return (
-    <header className="text-3xl overflow-x-hidden flex py-6 justify-between md:text-lg md:items-center md:justify-around md:px-4 md:py-6 ">
+    <header className="text-3xl overflow-x-hidden flex flex-row-reverse md:flex-row py-6 justify-between md:text-lg md:items-center md:justify-around md:px-4 md:py-6 ">
+      <MenuButton menu={menu} />
       <Logo />
       <Links />
-      <Dashboard mobile={true} />
+      <Dashboard />
       {/* Only for mobile*/}
-      <MenuButton menu={menu} />
       <Menu menu={menu} />
     </header>
   );
