@@ -1,8 +1,11 @@
-
+import How from "@/components/landingPage/how/How";
+import Main from "@/components/landingPage/main/Main";
 
 export default function Home() {
   return (
-    <main className="flex min-h-screen flex-col items-center justify-between">
+    <main className="overflow-x-hidden">
+      <Main />
+      <How />
     </main>
-  )
+  );
 }
