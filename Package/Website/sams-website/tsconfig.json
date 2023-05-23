@@ -28,7 +28,8 @@
     "**/*.ts",
     "**/*.tsx",
     ".next/types/**/*.ts",
-    "components/landingPage"
+    "components/landingPage",
+    "public/svg"
   ],
   "exclude": ["node_modules"]
 }

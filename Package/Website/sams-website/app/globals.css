@@ -6,12 +6,11 @@
 .main {
   position: relative;
   background: #fffdfa;
-  height: 90vh;
 }
 
 .wave {
   position: absolute;
-  height: 70px;
+  height: 29px;
   width: 100%;
   background: #fffdfa;
   bottom: 0;
@@ -22,6 +21,7 @@
   content: "";
   display: block;
   position: absolute;
+  z-index: 10;
   border-radius: 100% 50%;
 }
 
