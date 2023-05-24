@@ -1,5 +1,6 @@
 import React from "react";
-import SvgComponent from "@/components/landingPage/main/Svg";
+import Button from "../Button";
+import {BsArrowRight} from "react-icons/bs"
 
 function Main() {
   return (
@@ -22,10 +23,7 @@ function Main() {
           ¡Te presentamos nuestro Sistema Automatizado de Monitoreo de Sonidos!
         </p>
       </div>
-      <button className="z-[99] w-80 h-14 mt-6 mb-8 bg-secondary rounded-xl text-white font-medium shadow-2xl">
-        Empieza ahora!
-      </button>
-      <SvgComponent />
+      <Button text="Empieza ahora!" id="Button" href="/" className="mt-6 mb-8"><BsArrowRight id="Arrow" /></Button>
       <div className="wave"></div>
     </section>
   );
