@@ -30,6 +30,6 @@
     ".next/types/**/*.ts",
     "components/landingPage",
     "public/svg"
-  ],
+, "threejs/GLTFLoader.js"  ],
   "exclude": ["node_modules"]
 }
