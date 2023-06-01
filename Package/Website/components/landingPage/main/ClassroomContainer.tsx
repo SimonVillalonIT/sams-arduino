@@ -4,7 +4,7 @@ import { Model } from "./Classroom";
 import { OrbitControls } from "@react-three/drei";
 function ClassroomContainer() {
   return (
-    <div className="w-full flex max-w-prose">
+    <div className="w-full h-[330px] md:[750px]  flex max-w-prose">
       <Canvas className="" camera={{ zoom: 3, position: [-150, 90, 90]}}>
         <ambientLight intensity={0.5} />
         <pointLight position={[35, 35, 0]} />

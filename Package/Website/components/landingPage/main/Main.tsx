@@ -9,7 +9,7 @@ import ClassroomContainer from "./ClassroomContainer";
 
 function Main() {
   return (
-    <section className="bg-white flex justify-between pt-8 pb-16">
+    <section className="bg-white sm:flex justify-between pt-8 pb-16">
       <div className="flex flex-col items-center max-w-prose">
         <Title />
         <p className="text-center text-lg px-5 text-text text-shadow pt-8 pb-4">
@@ -27,7 +27,7 @@ function Main() {
           <BsArrowRight id="Arrow" />
         </Button>
       </div>
-        <ClassroomContainer />
+      <ClassroomContainer />
     </section>
   );
 }
