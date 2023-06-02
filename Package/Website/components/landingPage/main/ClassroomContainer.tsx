@@ -1,19 +1,26 @@
+import "animate.css";
+
 import React, { Suspense } from "react";
 import { Canvas } from "@react-three/fiber";
 import { Model } from "./Classroom";
 import { OrbitControls } from "@react-three/drei";
+import Loading from "@/app/loading";
 function ClassroomContainer() {
   return (
     <div className="w-full h-[330px] md:[750px]  flex max-w-prose">
-      <Canvas className="" camera={{ zoom: 3, position: [-150, 90, 90]}}>
-        <ambientLight intensity={0.5} />
-        <pointLight position={[35, 35, 0]} />
-        <pointLight position={[-35, 35, 0]} />
-        <Suspense fallback={null}>
-          <Model />
-        </Suspense>
-        <OrbitControls />   
-      </Canvas>
+      <Suspense fallback={<Loading />}>
+        <Canvas
+          camera={{ zoom: 3, position: [-150, 90, 90] }}
+        >
+          <ambientLight intensity={0.5} />
+          <pointLight position={[35, 35, 0]} />
+          <pointLight position={[-35, 35, 0]} />
+          <Suspense fallback={null}>
+            <Model />
+          </Suspense>
+          <OrbitControls />
+        </Canvas>
+      </Suspense>
     </div>
   );
 }
