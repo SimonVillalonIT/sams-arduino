@@ -7,10 +7,10 @@ import { OrbitControls } from "@react-three/drei";
 import Loading from "@/app/loading";
 function ClassroomContainer() {
   return (
-    <div className="w-full h-[330px] md:[750px]  flex max-w-prose">
+    <div className="hidden md:flex h-[330px] md:w-full md:h-[400px]">
       <Suspense fallback={<Loading />}>
         <Canvas
-          camera={{ zoom: 3, position: [-150, 90, 90] }}
+          camera={{ zoom: 2.8, position: [-150, 50, 90] }}
         >
           <ambientLight intensity={0.5} />
           <pointLight position={[35, 35, 0]} />

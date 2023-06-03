@@ -3,9 +3,9 @@ import Main from "@/components/landingPage/main/Main";
 
 export default function Home() {
   return (
-    <main>
-      <Main />
-      <How />
+    <main className="container">
+        <Main />
+        <How />
     </main>
   );
 }

@@ -4,8 +4,4 @@ export const headersData = {
     { text: "Contacto", link: "", title: "" },
     { text: "Costo", link: "", title: "" },
   ],
-  dashboard: {
-    register: "Registrarse",
-    dashboard: "Ir al dashboard"
-  }
 };

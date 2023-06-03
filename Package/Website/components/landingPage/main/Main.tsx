@@ -9,20 +9,20 @@ import ClassroomContainer from "./ClassroomContainer";
 
 function Main() {
   return (
-    <section className="bg-white sm:flex justify-between pt-8 pb-16">
-      <div className="flex flex-col items-center max-w-prose">
+    <section className="bg-primary sm:flex justify-between pt-8 md:px-16 h-[calc(100vh-90px)]">
+      <div className="flex flex-col items-center md:max-w-prose">
         <Title />
-        <p className="text-center text-lg px-5 text-text text-shadow pt-8 pb-4  animate__animated animate__fadeInDown">
+        <p className="text-center text-lg px-5 text-white/70 text-shadow pt-8 pb-4  animate__animated animate__fadeInDown">
           {mainData.paragraph}
         </p>
-        <p className="text-center text-xl px-5 text-strong  animate__animated animate__fadeInDown">
+        <p className="text-center text-xl px-5 text-white animate__animated animate__fadeInDown">
           {mainData.subparagraph}
         </p>
         <Button
           text={mainData.button}
           id="Button"
           href="/"
-          className="mt-6 mb-8  animate__animated animate__fadeInUp"
+          className="mt-32 mb-8 animate__animated animate__fadeInUp md:mt-6"
         >
           <BsArrowRight id="Arrow" />
         </Button>
