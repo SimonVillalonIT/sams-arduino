@@ -10,7 +10,7 @@ interface features {
 
 function Features({ title, right, text, img }: features) {
   return (
-    <div
+    <article
       className={`h-1/3 flex justify-around items-center px-4 ${
         right ? '' : 'flex-row-reverse'
       } md:bg-slate-700/10 md:flex-col md:mt-16 md:justify-between md:min-h-[230px] md:p-8 md:max-w-[250px] md:shadow-2xl md:backdrop-blur-xl z-10`}
@@ -38,7 +38,7 @@ function Features({ title, right, text, img }: features) {
           {text}
         </p>
       </div>
-    </div>
+    </article>
   )
 }
 

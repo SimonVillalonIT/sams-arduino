@@ -1,7 +1,7 @@
-import Header from '@/components/landingPage/header/Header'
+import Header from '@/components/landingPage/organisms/Header'
 import './globals.css'
 import { Inter } from 'next/font/google'
-import Footer from '@/components/landingPage/footer/Footer'
+import Footer from '@/components/landingPage/organisms/Footer'
 const inter = Inter({ subsets: ['latin'] })
 
 export default function RootLayout({
@@ -11,7 +11,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className={`${inter.className} bg-backgroundColor container`}>
+      <body className={`${inter.className} bg-primary container`}>
         <Header />
         {children}
         <Footer />

@@ -1,7 +1,7 @@
 import React from 'react'
 
 function page() {
-  return <div>page</div>
+  return <main className="flex flex-col "></main>
 }
 
 export default page
