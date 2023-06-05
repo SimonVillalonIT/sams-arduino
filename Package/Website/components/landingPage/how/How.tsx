@@ -13,8 +13,8 @@ function How() {
           {howData.paragraph}
         </p>
         <div className="bg-primary flex flex-col md:min-w-[75%] min-h-[400px] h-full justify-between md:justify-evenly md:max-w-2/3 md:flex-row">
-          {howData.features.map((feature) => (
-            <Features {...feature} />
+          {howData.features.map((feature, i) => (
+            <Features key={i} {...feature} />
           ))}
         </div>
       </div>
