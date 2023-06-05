@@ -13,7 +13,7 @@ function Button({ children, href, text, className, id }: ButtonProps) {
     <a
       href={href}
       id={id}
-      className={`z-[99] relative w-80 h-14 bg-secondary rounded-xl text-white font-medium text-center shadow-2xl flex justify-center items-center ${className}`}
+      className={`z-[99] relative w-80 h-14 bg-secondary rounded-xl font-medium text-center shadow-2xl flex justify-center items-center ${className}`}
     >
       {' '}
       {text}
