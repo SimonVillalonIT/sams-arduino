@@ -3,7 +3,7 @@ import SessionWrapper from '@/components/SessionWrapper'
 import useUserStore from '@/store/userStore'
 import React from 'react'
 
-function page() {
+function Home() {
   const { session } = useUserStore((state) => state)
 
   return (
@@ -13,4 +13,4 @@ function page() {
   )
 }
 
-export default page
+export default Home

@@ -5,7 +5,7 @@ import useUserStore from '@/store/userStore'
 function SessionWrapper({ children }: PropsWithChildren) {
   useEffect(() => {
     handleAuthStateChange()
-  }, [])
+  })
   const setSession = useUserStore((state) => state.setSession)
 
   const handleAuthStateChange = useCallback(() => {
