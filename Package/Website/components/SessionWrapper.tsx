@@ -4,7 +4,7 @@ import useUserStore from '@/store/userStore'
 import { useRouter } from 'next/navigation'
 
 function SessionWrapper({ children }: PropsWithChildren) {
-  const { loggedIn,session, setSession } = useUserStore((state) => state)
+  const { loggedIn, session, setSession } = useUserStore((state) => state)
   const router = useRouter()
 
   const handleAuthStateChange = useCallback(() => {

@@ -6,13 +6,13 @@ import { Provider, Session } from '@supabase/supabase-js'
 interface UserStoreState {
   loggedIn: boolean
   session: Session | null
-  setLoggedIn: (value: any) => void 
+  setLoggedIn: (value: any) => void
   setSession: (value: any) => void
   signIn: (provider: Provider) => void
   signOut: () => void
 }
 
-const useUserStore = create<UserStoreState>(
+const useUserStore = create<UserStoreState>()(
   persist(
     (set, get) => ({
       session: null,
