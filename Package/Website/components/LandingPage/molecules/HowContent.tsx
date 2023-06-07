@@ -1,5 +1,5 @@
 import React from 'react'
-import Features from '../molecules/Features'
+import Features from './Features'
 import { howData } from '@/data/How.data'
 import 'animate.css'
 
