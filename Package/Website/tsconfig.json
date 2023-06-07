@@ -28,7 +28,7 @@
     "**/*.ts",
     "**/*.tsx",
     ".next/types/**/*.ts",
-    "components/landingPage",
+    "components/LandingPage",
     "public/svg",
     "threejs/GLTFLoader.js"
   ],

@@ -1,7 +1,7 @@
 import Image from 'next/image'
 import React from 'react'
 import { GiHamburgerMenu } from 'react-icons/gi'
-import Links from './Links'
+import Links from '../molecules/Links'
 function Header() {
   return (
     <header className="w-full px-8 bg-primary flex items-center justify-between">
