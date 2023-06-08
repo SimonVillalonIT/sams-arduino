@@ -1,3 +1,4 @@
+'use client'
 import 'animate.css'
 
 import React, { Suspense } from 'react'
