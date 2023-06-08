@@ -1,6 +1,6 @@
 'use client'
-import SessionWrapper from '@/components/SessionWrapper'
-import useUserStore from '@/store/userStore'
+import SessionWrapper from 'components/SessionWrapper'
+import useUserStore from 'store/userStore'
 import React from 'react'
 
 function Home() {

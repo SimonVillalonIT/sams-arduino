@@ -1,8 +1,4 @@
-import React from 'react'
-import Hero from '../organisms/Hero'
-import How from '../organisms/How'
-import Contact from '../organisms/Contact'
-import Lights from '../molecules/Lights'
+import { Hero, How, Contact } from '../organisms'
 
 function LandingPageTemplate() {
   return (
@@ -10,7 +6,6 @@ function LandingPageTemplate() {
       <Hero />
       <How />
       <Contact />
-      <Lights />
     </main>
   )
 }

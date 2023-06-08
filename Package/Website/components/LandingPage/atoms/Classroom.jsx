@@ -7,6 +7,8 @@ Source: https://sketchfab.com/3d-models/classroom-41337d81e2514c5787ef0d2860dbc4
 Title: Classroom
 */
 
+'use client'
+
 import React, { useRef } from 'react'
 import { useGLTF } from '@react-three/drei'
 

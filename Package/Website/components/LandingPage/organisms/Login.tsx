@@ -1,7 +1,8 @@
-import React, { useEffect } from 'react'
-import Button from '../atoms/Button'
 import { FaGoogle, FaGithub } from 'react-icons/fa'
-import useUserStore from '@/store/userStore'
+
+import useUserStore from 'store/userStore'
+
+import { Button } from 'components/LandingPage/atoms'
 
 function Login() {
   const { signIn } = useUserStore((state) => state)

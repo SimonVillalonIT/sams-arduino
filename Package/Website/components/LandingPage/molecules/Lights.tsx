@@ -1,5 +1,4 @@
-import React from 'react'
-import Light from '../atoms/Light'
+import { Light } from 'components/LandingPage/atoms'
 
 function Lights() {
   return (
