@@ -1,3 +1,4 @@
+'use client'
 import React, { PropsWithChildren, useEffect, useCallback } from 'react'
 import { supabase } from 'utils/auth'
 import useUserStore from 'store/userStore'

@@ -23,7 +23,7 @@ const useUserStore = create<UserStoreState>()(
         const { data, error } = await supabase.auth.signInWithOAuth({
           provider: provider,
           options: {
-            redirectTo: 'http://localhost:3000/home',
+            redirectTo: `${location.origin}/home`,
           },
         })
         get().setLoggedIn(true)

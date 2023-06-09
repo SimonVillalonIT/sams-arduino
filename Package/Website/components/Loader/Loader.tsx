@@ -6,15 +6,13 @@ import { PropsWithChildren, useEffect, useState } from 'react'
 function Loader({ children }: PropsWithChildren) {
   const [loading, setLoading] = useState(true)
   useEffect(() => {
-    setTimeout(() => {
-      setLoading(false)
-    }, 3000)
+    setLoading(false)
   }, [])
 
   return (
     <>
       {loading ? (
-        <div className="fixed w-full min-h-[90vh] flex justify-center items-center">
+        <div className="fixed w-full min-h-[100vh] flex justify-center items-center">
           <Spinner />
         </div>
       ) : (
