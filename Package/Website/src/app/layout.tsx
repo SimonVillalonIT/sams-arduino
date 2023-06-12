@@ -7,7 +7,9 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className="bg-primary flex flex-col min-h-screen">{children}</body>
+      <body className="flex flex-col overflow-x-clip bg-primary">
+        {children}
+      </body>
     </html>
   )
 }

@@ -19,13 +19,13 @@ function HeroContent() {
           <Login />
         </SessionWrapper>
       ) : null}
-      <h1 className="text-center italic font-semibold text-white text-shadow px-4 text-[30px] animate__animated animate__fadeInDown [--animate-duration:1s] z-10">
+      <h1 className="text-shadow animate__animated animate__fadeInDown z-10 px-4 text-center text-[30px] font-semibold italic text-white [--animate-duration:1s]">
         {main.title}
       </h1>
-      <p className="text-center text-lg px-5 text-white/80 text-shadow pt-8 pb-4 z-10 animate__animated animate__fadeInDown">
+      <p className="text-shadow animate__animated animate__fadeInDown z-10 px-5 pb-4 pt-8 text-center text-lg text-white/80">
         {main.paragraph}
       </p>
-      <p className="text-center text-xl px-5 text-white z-10 animate__animated animate__fadeInDown">
+      <p className="animate__animated animate__fadeInDown z-10 px-5 text-center text-xl text-white">
         {main.subparagraph}
       </p>
       <Button
@@ -33,7 +33,7 @@ function HeroContent() {
         text={main.button}
         id="Button"
         right={true}
-        className="mt-32 mb-8 z-10 animate__animated animate__fadeInUp md:mt-6 text-white"
+        className="animate__animated animate__fadeInUp z-10 mb-8 mt-32 text-white md:mt-6"
       >
         <BsArrowRight id="Arrow" />
       </Button>

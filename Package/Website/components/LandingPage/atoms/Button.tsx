@@ -23,7 +23,7 @@ function Button({
     <a
       href={href}
       id={id}
-      className={`z-[99] relative w-80 h-14 bg-secondary rounded-xl font-medium text-center shadow-2xl flex justify-center items-center ${className}`}
+      className={`relative z-[99] flex h-14 w-80 items-center justify-center rounded-xl bg-secondary text-center font-medium shadow-2xl ${className}`}
     >
       {' '}
       {text}
@@ -35,7 +35,7 @@ function Button({
     <button
       onClick={onClick}
       id={id}
-      className={`z-[99] relative w-80 h-14 bg-secondary rounded-xl font-medium text-center shadow-2xl flex justify-center items-center ${className}`}
+      className={`relative z-[99] flex h-14 w-80 items-center justify-center rounded-xl bg-secondary text-center font-medium shadow-2xl ${className}`}
     >
       {' '}
       {text}

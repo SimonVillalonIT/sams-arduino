@@ -9,20 +9,20 @@ interface card {
 
 function Card({ title, text, img }: card) {
   return (
-    <article className="backdrop-blur-2xl shadow-2xl bg-slate-200/10 h-full flex flex-col justify-evenly items-center px-2 py-4">
+    <article className="flex h-full flex-col items-center justify-evenly bg-slate-200/10 px-2 py-4 shadow-2xl backdrop-blur-2xl">
       <Image
-        className="w-32 h-32"
+        className="h-32 w-32"
         src={img}
         width={300}
         height={300}
         alt="Icon"
       />
       <h1
-        className={` text-white text-shadow text-xl md:text-2xl font-semibold z-10 relative md:text-center md:max-w-[150px]`}
+        className={` text-shadow relative z-10 text-xl font-semibold text-white md:max-w-[150px] md:text-center md:text-2xl`}
       >
         {title}
       </h1>
-      <p className="w-72 text-white text-center">{text}</p>
+      <p className="w-72 text-center text-white">{text}</p>
     </article>
   )
 }

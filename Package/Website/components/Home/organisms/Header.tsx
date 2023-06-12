@@ -7,16 +7,16 @@ import useUserStore from 'store/userStore'
 function Header() {
   const { signOut } = useUserStore((state) => state)
   return (
-    <header className="w-full px-8 z-99 bg-primary flex items-center justify-between">
+    <header className="z-99 flex w-full items-center justify-between bg-primary px-8">
       <Image
-        className="w-auto md:h-[90px] z-10"
+        className="z-10 w-auto md:h-[90px]"
         src="/WhiteLogo.png"
         width={300}
         height={300}
         alt="Sams-Logo"
       />
       <GiExitDoor
-        className="text-5xl text-white z-[99] cursor-pointer hover:text-secondary duration-300"
+        className="z-[99] cursor-pointer text-5xl text-white duration-300 hover:text-secondary"
         onClick={signOut}
       />
     </header>

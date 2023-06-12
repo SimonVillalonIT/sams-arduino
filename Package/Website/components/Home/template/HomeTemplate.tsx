@@ -2,8 +2,8 @@
 import SessionWrapper from 'components/SessionWrapper'
 import useUserStore from 'store/userStore'
 import React from 'react'
-import Card from '../molecules/Card'
 import { Button } from 'components/LandingPage/atoms'
+import { Carousel, Card } from '../molecules'
 
 function Home() {
   const { session } = useUserStore((state) => state)
@@ -11,10 +11,11 @@ function Home() {
   return (
     <main className="z-[99] flex flex-col items-center">
       <SessionWrapper>
-        <h1 className="text-white font-bold text-2xl pb-8">
+        <h1 className="pb-8 text-2xl font-bold text-white">
           Bienvenido de nuevo, {session?.user.user_metadata.full_name}
         </h1>
-        <div className="flex justify-evenly w-11/12 h-72 items-center">
+        <Carousel />
+        <div className="hidden h-72 w-11/12 items-center justify-evenly md:flex">
           <Card
             title="Aulas"
             text="Crea las aulas donde los sistemas seran utilizados"
@@ -34,7 +35,7 @@ function Home() {
         <Button
           href="/home/create"
           text="Create your first classroom"
-          className="text-white font-bold mt-8"
+          className="mt-8 font-bold text-white"
         />
       </SessionWrapper>
     </main>
