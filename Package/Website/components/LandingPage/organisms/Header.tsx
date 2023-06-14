@@ -17,9 +17,12 @@ function Header() {
         alt="Sams-Logo"
       />
       {loggedIn ? (
-        <a className="z-50 cursor-pointer text-white" href="/home">
-          Ir al dashboard
-        </a>
+        <>
+          <Links />
+          <a className="z-50 cursor-pointer text-white" href="/home">
+            Ir al dashboard
+          </a>
+        </>
       ) : (
         <Links />
       )}

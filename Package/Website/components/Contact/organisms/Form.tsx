@@ -10,7 +10,7 @@ function Form() {
     last: '',
     message: '',
   })
-  const [error, setError] = useState<undefined | boolean>(undefined)
+  const [error, setError] = useState<string>('')
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setData({
@@ -28,28 +28,58 @@ function Form() {
         user_id: 'S4cEkUuIYWHJmqsT6',
         template_params: { ...data },
       }
+      setError('loading')
       const query = await fetch('https://api.emailjs.com/api/v1.0/email/send', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(formData),
       })
       const result = query.ok
-
-      result ? setError(false) : setError(true)
+      result ? setError('false') : setError('true')
     } catch (error) {
       console.log(error)
     }
     console.log('click')
-    setError(false)
   }
 
   return (
-    <form className="container flex justify-center flex-wrap text-white" onSubmit={handleSubmit}>
-      <Input name="first" value={data.first} handleChange={handleChange} />
-      <Input name="last" value={data.last} handleChange={handleChange} />
-      <Input name="phone" type='tel' value={data.phone} handleChange={handleChange} />
-      <Input name="email" type='email' value={data.email} handleChange={handleChange} />
-      <Input name="message" type='textarea' value={data.message} handleChange={handleChange} />
+    <form
+      className="container flex flex-wrap justify-center text-white"
+      onSubmit={handleSubmit}
+    >
+      <Input
+        label="Nombre*"
+        name="first"
+        value={data.first}
+        handleChange={handleChange}
+      />
+      <Input
+        label="Apellido*"
+        name="last"
+        value={data.last}
+        handleChange={handleChange}
+      />
+      <Input
+        label="Numero de telefono*"
+        name="phone"
+        type="tel"
+        value={data.phone}
+        handleChange={handleChange}
+      />
+      <Input
+        label="Correo electronico*"
+        name="email"
+        type="email"
+        value={data.email}
+        handleChange={handleChange}
+      />
+      <Input
+        label="Mensaje*"
+        name="message"
+        type="textarea"
+        value={data.message}
+        handleChange={handleChange}
+      />
       <SubmitButton state={error} />
     </form>
   )

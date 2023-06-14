@@ -5,20 +5,34 @@ function Input({
   value,
   type,
   handleChange,
+  label,
 }: {
   name: string
   type?: string
   value: string
+  label: string
   handleChange: (e: React.ChangeEvent<HTMLInputElement>) => void
 }) {
   return (
-    <div className="text-white flex flex-col px-8 w-full">
-      <label className='text-white font-semibold' htmlFor={name}>{name}</label>
+    <div
+      className={`flex w-full flex-col px-8 pb-3 text-xl font-semibold text-white ${
+        type === 'textarea' ? null : 'md:max-w-[50%]'
+      }`}
+    >
+      <label className="mb-1 font-medium text-white" htmlFor={name}>
+        {label}
+      </label>
       {type === 'textarea' ? (
-        <textarea name={name} id={name} cols={30} rows={10} className=" rounded-xl bg-slate-100/10 backdrop-blur-xl"></textarea>
+        <textarea
+          name={name}
+          id={name}
+          cols={30}
+          rows={10}
+          className="rounded-xl bg-slate-100/10 p-4 backdrop-blur-xl"
+        ></textarea>
       ) : (
         <input
-        className='p-4 bg-slate-100/10 backdrop-blur-xl rounded-xl'
+          className="rounded-xl bg-slate-100/10 p-4 backdrop-blur-xl"
           onChange={handleChange}
           value={value}
           id={name}
