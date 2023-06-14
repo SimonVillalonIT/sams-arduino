@@ -1,3 +1,4 @@
 import Input from './Input'
+import SubmitButton from './SubmitButton'
 
-export { Input }
+export { Input, SubmitButton}

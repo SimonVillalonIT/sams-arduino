@@ -1,6 +1,6 @@
 'use client'
 import { useState } from 'react'
-import { Input } from '../atoms'
+import { Input, SubmitButton } from '../atoms'
 
 function Form() {
   const [data, setData] = useState({
@@ -10,6 +10,7 @@ function Form() {
     last: '',
     message: '',
   })
+  const [error, setError] = useState<undefined | boolean>(undefined)
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setData({
@@ -18,40 +19,38 @@ function Form() {
     })
   }
 
-  async function handleSubmit(e: React.ChangeEvent<HTMLFormElement>) {
+  async function handleSubmit(e: any) {
     e.preventDefault()
     try {
-      const response: any = await fetch('/email', {
-        headers: {
-          Accept: 'application/json',
-          'Content-Type': 'application/json',
-        },
-        method: 'post',
-        body: JSON.stringify(data),
-      })
-      if (!response.status) {
-        console.log(response)
-        throw new Error(`Invalid response: ${response.status}`)
+      const formData = {
+        service_id: 'service_zgj5haf',
+        template_id: 'template_bxg2miu',
+        user_id: 'S4cEkUuIYWHJmqsT6',
+        template_params: { ...data },
       }
-      console.log(response)
-      alert('Thanks for contacting us, we will get back to you soon!')
-    } catch (err) {
-      console.error(err)
-      alert("We can't submit the form, try again later?")
+      const query = await fetch('https://api.emailjs.com/api/v1.0/email/send', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(formData),
+      })
+      const result = query.ok
+
+      result ? setError(false) : setError(true)
+    } catch (error) {
+      console.log(error)
     }
+    console.log('click')
+    setError(false)
   }
 
   return (
-    <form className="container text-white" onSubmit={handleSubmit}>
-      <h1>Get in touch</h1>
-      <Input name="email" value={data.email} handleChange={handleChange} />
-      <Input name="phone" value={data.phone} handleChange={handleChange} />
+    <form className="container flex justify-center flex-wrap text-white" onSubmit={handleSubmit}>
       <Input name="first" value={data.first} handleChange={handleChange} />
       <Input name="last" value={data.last} handleChange={handleChange} />
-      <Input name="message" value={data.message} handleChange={handleChange} />
-      <div className="button block">
-        <button type="submit">Submit</button>
-      </div>
+      <Input name="phone" type='tel' value={data.phone} handleChange={handleChange} />
+      <Input name="email" type='email' value={data.email} handleChange={handleChange} />
+      <Input name="message" type='textarea' value={data.message} handleChange={handleChange} />
+      <SubmitButton state={error} />
     </form>
   )
 }
