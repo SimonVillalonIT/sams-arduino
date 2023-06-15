@@ -16,7 +16,7 @@ function HeroContent() {
     <div className="flex flex-col items-center md:max-w-prose">
       {showLogin ? (
         <SessionWrapper>
-          <Login />
+          <Login setLogin={setShowLogin} />
         </SessionWrapper>
       ) : null}
       <h1 className="text-shadow animate__animated animate__fadeInDown z-10 px-4 text-center text-[30px] font-semibold italic text-white [--animate-duration:1s]">

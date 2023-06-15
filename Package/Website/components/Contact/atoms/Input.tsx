@@ -15,7 +15,7 @@ function Input({
 }) {
   return (
     <div
-      className={`flex w-full flex-col px-8 pb-3 text-xl font-semibold text-white ${
+      className={`flex w-full flex-col px-3 pb-3 text-xl font-semibold text-white md:text-lg ${
         type === 'textarea' ? null : 'md:max-w-[50%]'
       }`}
     >
@@ -27,12 +27,12 @@ function Input({
           name={name}
           id={name}
           cols={30}
-          rows={10}
+          rows={5}
           className="rounded-xl bg-slate-100/10 p-4 backdrop-blur-xl"
         ></textarea>
       ) : (
         <input
-          className="rounded-xl bg-slate-100/10 p-4 backdrop-blur-xl"
+          className=" rounded-md bg-slate-100/10 p-4 backdrop-blur-xl md:p-0 md:px-2"
           onChange={handleChange}
           value={value}
           id={name}

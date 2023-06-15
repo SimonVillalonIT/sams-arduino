@@ -11,41 +11,42 @@ $circle-size: 40px;
 
 .loading-btn {
   $root: &;
-  
+
   position: relative;
-  
+
   display: inline-block;
   width: 100%;
   height: 100%;
-  
+
   border: 0;
   border-radius: 24px;
-  
+
   cursor: pointer;
-  
-  transition: all .33s ease-in-out;
-  
-  &, &:focus {
+
+  transition: all 0.33s ease-in-out;
+
+  &,
+  &:focus {
     outline: none;
   }
-  
+
   // Styles for all states
   &--pending,
   &--success,
   &--fail {
     // Morph button to circle (width equals height)
     width: $circle-size;
-    
+
     // Prevent any further clicks triggering events during animation
     pointer-events: none;
     cursor: default;
-    
+
     // Hide text
     #{$root}__text {
       opacity: 0;
     }
   }
-  
+
   // State "pending"
   // Show loading indicator
   &--pending:before {
@@ -58,23 +59,22 @@ $circle-size: 40px;
     display: inline-block;
 
     // Can't use percentage here as we already show this icon during morph animation
-    height: #{$circle-size * .7};
-    width: #{$circle-size * .7};
+    height: #{$circle-size * 0.7};
+    width: #{$circle-size * 0.7};
 
-    border: 3px solid rgba(255, 255, 255, .33);
+    border: 3px solid rgba(255, 255, 255, 0.33);
     border-top-color: #fff;
     border-radius: 50%;
 
-    animation:
-      loading-btn--fade-in .33s ease,
-      loading-btn--rotation .66s linear 0s infinite;
+    animation: loading-btn--fade-in 0.33s ease,
+      loading-btn--rotation 0.66s linear 0s infinite;
   }
-    
+
   // Success state - show check icon
   &--success {
-    
     // Different background color (also on hover)
-    &, &:hover {
+    &,
+    &:hover {
       background: #8bc34a;
     }
 
@@ -97,16 +97,15 @@ $circle-size: 40px;
 
       transform: translate(-50%, -75%) rotate(-45deg);
 
-      animation: 
-        loading-btn--fade-in .6s ease;
+      animation: loading-btn--fade-in 0.6s ease;
     }
-  } 
+  }
 
   // Fail state - show cross icon
   &--fail {
-    
     // Different background color (also on hover)
-    &, &:hover {
+    &,
+    &:hover {
       background: #ff5722;
     }
 
@@ -124,73 +123,68 @@ $circle-size: 40px;
       width: 65%;
 
       // Using background gradient is the only solution creating a cross with a single element
-      background: 
-        linear-gradient(
+      background: linear-gradient(
           to bottom,
-          transparent 44%, 
-          #fff 44%, 
-          #fff 56%,  
+          transparent 44%,
+          #fff 44%,
+          #fff 56%,
           transparent 56%
         ),
-
         linear-gradient(
           to right,
-          transparent 44%, 
-          #fff 44%, 
-          #fff 56%,  
+          transparent 44%,
+          #fff 44%,
+          #fff 56%,
           transparent 56%
-      );
+        );
 
       transform: translate(-50%, -50%) rotate(-45deg);
 
-      animation: 
-        loading-btn--fade-in .6s ease;
+      animation: loading-btn--fade-in 0.6s ease;
     }
-  } 
-  
-  // Text has to be positioned absolute in order prevent line-breaks or trimming of text when morphing button to circle.  
+  }
+
+  // Text has to be positioned absolute in order prevent line-breaks or trimming of text when morphing button to circle.
   &__text {
     position: absolute;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    
+
     overflow: hidden;
     white-space: nowrap;
     text-overflow: ellipsis;
-    
+
     font-size: 13px;
     color: #fff;
-    
+
     transition: inherit;
   }
 }
-
 
 /**
  * Animations
  */
 
 @keyframes loading-btn--fade-in {
-    0% {
-        opacity: 0;
-    }
+  0% {
+    opacity: 0;
+  }
 
-    100% {
-        opacity: 1;
-    }
+  100% {
+    opacity: 1;
+  }
 }
 
 @keyframes loading-btn--rotation {
-    0% {
-        transform: translate(-50%, -50%) rotate(0deg);
-    }
+  0% {
+    transform: translate(-50%, -50%) rotate(0deg);
+  }
 
-    100% {
-        transform: translate(-50%, -50%) rotate(360deg);
-    }
+  100% {
+    transform: translate(-50%, -50%) rotate(360deg);
+  }
 }
-
 
 /**
  * Optical stuff - has nothing todo with button animation.
@@ -198,7 +192,7 @@ $circle-size: 40px;
 
 .state-list {
   margin-bottom: 12px;
-  
+
   .loading-btn-wrapper {
     background: repeating-linear-gradient(
       45deg,
