@@ -1,6 +1,5 @@
-import React from 'react'
-import HowContent from '../molecules/HowContent'
-import Light from '../atoms/Light'
+import { HowContent } from '../molecules'
+import { Light } from '../atoms'
 
 function How() {
   return (

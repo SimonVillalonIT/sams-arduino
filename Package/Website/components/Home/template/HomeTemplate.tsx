@@ -1,7 +1,6 @@
 'use client'
 import SessionWrapper from 'components/SessionWrapper'
 import useUserStore from 'store/userStore'
-import React from 'react'
 import { Button } from 'components/LandingPage/atoms'
 import { Carousel, Card } from '../molecules'
 

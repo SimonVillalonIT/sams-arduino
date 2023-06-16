@@ -1,6 +1,5 @@
 'use client'
 import Image from 'next/image'
-import React from 'react'
 import { GiExitDoor } from 'react-icons/gi'
 import useUserStore from 'store/userStore'
 

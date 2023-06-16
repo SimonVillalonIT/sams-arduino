@@ -5,12 +5,15 @@ import useUserStore from 'store/userStore'
 import { useRouter } from 'next/navigation'
 
 function SessionWrapper({ children }: PropsWithChildren) {
-  const { loggedIn, setSession } = useUserStore((state) => state)
+  const { loggedIn, setSession, setLoggedIn } = useUserStore((state) => state)
   const router = useRouter()
 
   const handleAuthStateChange = useCallback(() => {
     supabase.auth.onAuthStateChange((authEvent, changedSession) => {
-      setSession(changedSession)
+      if (changedSession) {
+        setSession(changedSession)
+        setLoggedIn(true)
+      }
     })
   }, [setSession])
 

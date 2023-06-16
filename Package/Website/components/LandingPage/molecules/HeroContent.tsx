@@ -1,10 +1,7 @@
 'use client'
-
 import { useState } from 'react'
 import { BsArrowRight } from 'react-icons/bs'
-
 import { main } from 'data/LandingPage'
-
 import SessionWrapper from 'components/SessionWrapper'
 import { Button } from '../atoms'
 import { Login } from '../organisms'

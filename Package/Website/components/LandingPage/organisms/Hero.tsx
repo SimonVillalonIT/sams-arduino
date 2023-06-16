@@ -1,8 +1,7 @@
 'use client'
 import React from 'react'
-import ClassroomContainer from '../molecules/ClassroomContainer'
-import HeroContent from '../molecules/HeroContent'
 import { FaArrowDown } from 'react-icons/fa'
+import { HeroContent, ClassroomContainer } from '../molecules/'
 
 function Hero() {
   return (

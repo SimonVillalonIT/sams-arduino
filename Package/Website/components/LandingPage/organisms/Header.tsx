@@ -1,12 +1,11 @@
 'use client'
 import Image from 'next/image'
-import React from 'react'
-import { GiHamburgerMenu, GiExitDoor } from 'react-icons/gi'
-import Links from '../molecules/Links'
+import { GiHamburgerMenu } from 'react-icons/gi'
 import useUserStore from 'store/userStore'
+import { Links } from '../molecules'
 
 function Header() {
-  const { signOut, loggedIn } = useUserStore((state) => state)
+  const { loggedIn } = useUserStore((state) => state)
   return (
     <header className="z-99 flex w-full items-center justify-between bg-primary px-8">
       <Image
@@ -19,7 +18,10 @@ function Header() {
       {loggedIn ? (
         <>
           <Links />
-          <a className="z-50 cursor-pointer text-white" href="/home">
+          <a
+            className="z-50 cursor-pointer border-2 border-transparent text-lg font-bold text-white duration-300 hover:border-b-2 hover:border-b-white"
+            href="/home"
+          >
             Ir al dashboard
           </a>
         </>

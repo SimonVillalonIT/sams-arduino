@@ -20,13 +20,12 @@ const useUserStore = create<UserStoreState>()(
       setSession: (value) => set(() => ({ session: value })),
       setLoggedIn: (value) => set(() => ({ loggedIn: value })),
       signIn: async (provider) => {
-        const { data, error } = await supabase.auth.signInWithOAuth({
+        await supabase.auth.signInWithOAuth({
           provider: provider,
           options: {
             redirectTo: `${location.origin}/home`,
           },
         })
-        get().setLoggedIn(true)
       },
       signOut: () => {
         get().setLoggedIn(false)

@@ -1,4 +1,3 @@
-import React from 'react'
 import { Carousel } from 'react-responsive-carousel'
 import { Card } from '.'
 import 'react-responsive-carousel/lib/styles/carousel.min.css'
