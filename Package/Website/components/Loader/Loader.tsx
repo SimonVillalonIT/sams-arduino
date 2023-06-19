@@ -1,10 +1,11 @@
 'use client'
+import useLoadingStore from 'store/loading.store'
 import './Loader.css'
 import Spinner from './Spinner'
-import { PropsWithChildren, useEffect, useState } from 'react'
+import { PropsWithChildren, useEffect } from 'react'
 
 function Loader({ children }: PropsWithChildren) {
-  const [loading, setLoading] = useState(true)
+  const { loading, setLoading } = useLoadingStore((state) => state)
   useEffect(() => {
     setLoading(false)
   }, [])

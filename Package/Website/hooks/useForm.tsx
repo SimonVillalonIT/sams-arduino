@@ -1,3 +1,4 @@
+import axios from 'axios'
 import { useState } from 'react'
 
 export default function useForm() {
@@ -8,7 +9,7 @@ export default function useForm() {
     last: '',
     message: '',
   })
-  const [error, setError] = useState<string>('')
+  const [buttonState, setButtonState] = useState<string>('')
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setData({
@@ -26,14 +27,15 @@ export default function useForm() {
         user_id: 'S4cEkUuIYWHJmqsT6',
         template_params: { ...data },
       }
-      setError('loading')
-      const query = await fetch('https://api.emailjs.com/api/v1.0/email/send', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(formData),
-      })
-      const result = query.ok
-      result ? setError('false') : setError('true')
+      setButtonState('loading')
+      const { status } = await axios.post(
+        'https://api.emailjs.com/api/v1.0/email/send',
+        JSON.stringify(formData),
+        {
+          headers: { 'Content-Type': 'application/json' },
+        },
+      )
+      status === 200 ? setButtonState('false') : setButtonState('true')
     } catch (error) {
       console.log(error)
     }
@@ -44,6 +46,6 @@ export default function useForm() {
     data,
     handleChange,
     handleSubmit,
-    error,
+    buttonState,
   }
 }

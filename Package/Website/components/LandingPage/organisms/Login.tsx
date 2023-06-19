@@ -12,7 +12,9 @@ function Login({ setLogin }: { setLogin: Dispatch<SetStateAction<boolean>> }) {
       <div className="relative flex h-1/2 flex-col justify-between rounded-2xl bg-[#1c1c1c]/60 p-12 py-4 shadow-2xl">
         <RxCross1
           className="absolute right-6 text-secondary"
-          onClick={()=>{setLogin(false)}}
+          onClick={() => {
+            setLogin(false)
+          }}
         />
         <div className="flex h-full flex-col justify-evenly">
           <p className="text-center font-bold text-secondary">

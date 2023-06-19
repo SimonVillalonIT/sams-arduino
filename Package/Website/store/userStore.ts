@@ -1,6 +1,6 @@
 import { create } from 'zustand'
 import { persist } from 'zustand/middleware'
-import { supabase } from 'utils/auth'
+import { supabase } from 'utils/supabase'
 import { Provider, Session } from '@supabase/supabase-js'
 
 interface UserStoreState {
