@@ -4,7 +4,12 @@ import 'react-responsive-carousel/lib/styles/carousel.min.css'
 
 function CarouselContainer() {
   return (
-    <Carousel className="md:hidden" showStatus={false} autoPlay={true}>
+    <Carousel
+      className="md:hidden"
+      showThumbs={false}
+      showStatus={false}
+      autoPlay={true}
+    >
       <Card
         title="Aulas"
         text="Crea las aulas donde los sistemas seran utilizados"

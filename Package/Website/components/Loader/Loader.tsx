@@ -12,7 +12,7 @@ function Loader({ children }: PropsWithChildren) {
   return (
     <>
       {loading ? (
-        <div className="fixed flex min-h-[100vh] w-full items-center justify-center">
+        <div className="fixed flex min-h-[calc(100vh-90px)] w-full items-center justify-center">
           <Spinner />
         </div>
       ) : (

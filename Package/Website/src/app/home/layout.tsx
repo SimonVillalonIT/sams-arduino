@@ -11,7 +11,7 @@ export default function DashboardLayout({
   return (
     <SessionWrapper>
       <Header />
-      <main>
+      <main className="min-h-[calc(100vh-90px)]">
         <Navbar />
         <Loader>{children}</Loader>
       </main>
