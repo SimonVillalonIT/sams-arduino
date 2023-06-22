@@ -336,6 +336,7 @@ void handleServerWifiRoute(AsyncWebServerRequest *request) {
   request->send(200, "text/plain", "WiFi successfully connected and saved.");
 }
 
+
 void setup() {
   Serial.begin(115200);
 
@@ -371,28 +372,44 @@ void loop() {
     return;
   }
 
-  int sensorValue = random(300);  // Read the analog value from the sensor
-  Serial.println(sensorValue);
+   // Example array of sensor data
+  int sensorData[] = {10, 20, 30, 40, 50};
 
-  HTTPClient client;
+  // Get the length of the array
+  int dataLength = sizeof(sensorData) / sizeof(sensorData[0]);
 
-  client.begin(SUPABASE_URL + "/rest/v1/device?id=eq." + deviceId);
-  client.addHeader("Authorization", "Bearer " + SUPABASE_TOKEN);
-  client.addHeader("apikey", SUPABASE_TOKEN);
-  client.addHeader("Accept", "application/json");
+  // Create an array of HTTPClient objects
+  HTTPClient clients[dataLength];
 
-  const size_t Capacity = JSON_OBJECT_SIZE(3);
-  StaticJsonDocument<Capacity> doc;
+  // Create an array to store the response codes
+  int responseCodes[dataLength];
 
-  JsonObject obj = doc.to<JsonObject>();
-  obj["sound_level"] = sensorValue;
-  serializeJson(obj, sensorData);
-  Serial.println("Json object: ");
-  Serial.println(obj);
+  // Send the POST requests concurrently
+  for (int i = 0; i < dataLength; i++) {
+    // Create the JSON payload with variables
+    String jsonPayload = "{\"deviceid\":\"" + deviceId + "\",\"sensorid\":" + String(i) + ",\"sound_level\":" + String(sensorData[i]) + "}";
 
-  int httpCode = client.PATCH(String(sensorData));
+    // Begin the HTTPClient request
+    clients[i].begin(SUPABASE_URL + "/rest/v1/rpc/handle_sensor");
+    clients[i].addHeader("Authorization", "Bearer " + SUPABASE_TOKEN);
+    clients[i].addHeader("apikey", SUPABASE_TOKEN);
+    clients[i].addHeader("Content-Type", "application/json");
 
-  client.end();
+    // Send the POST request
+    responseCodes[i] = clients[i].POST(jsonPayload);
 
-  delay(500);
+    // Clean up the HTTPClient object
+    clients[i].end();
+  }
+
+  // Handle the responses
+  for (int i = 0; i < dataLength; i++) {
+    Serial.print("Request ");
+    Serial.print(i);
+    Serial.print(" - Response code: ");
+    Serial.println(responseCodes[i]);
+  }
+
+  // Delay before starting the next round of requests
+  delay(5000);
 }
