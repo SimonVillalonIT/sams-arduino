@@ -372,44 +372,45 @@ void loop() {
     return;
   }
 
-   // Example array of sensor data
+  // Example array of sensor data
   int sensorData[] = {10, 20, 30, 40, 50};
 
   // Get the length of the array
   int dataLength = sizeof(sensorData) / sizeof(sensorData[0]);
 
-  // Create an array of HTTPClient objects
-  HTTPClient clients[dataLength];
+  // Initialize the HTTP client
+  HTTPClient client;
 
-  // Create an array to store the response codes
-  int responseCodes[dataLength];
-
-  // Send the POST requests concurrently
-  for (int i = 0; i < dataLength; i++) {
-    // Create the JSON payload with variables
+  // Iterate over the array and send each element to the backend
+  for (int i = 0; i < dataLength; i++) {  
+    // Update the sensorid value based on the loop iteration
     String jsonPayload = "{\"deviceid\":\"" + deviceId + "\",\"sensorid\":" + String(i) + ",\"sound_level\":" + String(sensorData[i]) + "}";
 
-    // Begin the HTTPClient request
-    clients[i].begin(SUPABASE_URL + "/rest/v1/rpc/handle_sensor");
-    clients[i].addHeader("Authorization", "Bearer " + SUPABASE_TOKEN);
-    clients[i].addHeader("apikey", SUPABASE_TOKEN);
-    clients[i].addHeader("Content-Type", "application/json");
+    // Begin the HTTP request
+    client.begin(SUPABASE_URL + "/rest/v1/rpc/handle_sensor");
+    client.addHeader("Authorization", "Bearer " + SUPABASE_TOKEN);
+    client.addHeader("apikey", SUPABASE_TOKEN);
+    client.addHeader("Content-Type", "application/json");
 
     // Send the POST request
-    responseCodes[i] = clients[i].POST(jsonPayload);
+    int httpResponseCode = client.POST(jsonPayload);
 
-    // Clean up the HTTPClient object
-    clients[i].end();
+    // Check the response code
+    if (httpResponseCode > 0) {
+      Serial.print("Request ");
+      Serial.print(i);
+      Serial.print(" - Response code: ");
+      Serial.println(httpResponseCode);
+    } else {
+      Serial.print("Request ");
+      Serial.print(i);
+      Serial.print(" - Response code: ");
+      Serial.println(httpResponseCode);
+    }
+
+    // End the HTTP request
+    client.end();
   }
 
-  // Handle the responses
-  for (int i = 0; i < dataLength; i++) {
-    Serial.print("Request ");
-    Serial.print(i);
-    Serial.print(" - Response code: ");
-    Serial.println(responseCodes[i]);
-  }
-
-  // Delay before starting the next round of requests
-  delay(5000);
+  delay(1000);
 }

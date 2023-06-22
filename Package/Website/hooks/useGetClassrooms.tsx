@@ -3,10 +3,10 @@ import useUserStore from 'store/userStore'
 import { supabase, supabaseFetch } from 'utils/supabase'
 
 interface Classroom {
-  classroom: string
+  idDevice: string
+  sensorNumber: string
+  data: number
   created_at: string
-  id: string
-  sound_level: number
 }
 
 function useGetClassrooms() {
@@ -16,7 +16,7 @@ function useGetClassrooms() {
 
   const suscribeToChanges = () => {
     if (ids.length === 0) return
-    const filter = `id=in.(${ids.join(',')})`
+    const filter = `idDevice=in.(${ids.join(',')})`
     const channel = supabase
       .channel('schema-db-changes')
       .on(
@@ -24,7 +24,7 @@ function useGetClassrooms() {
         {
           event: '*',
           schema: 'public',
-          table: 'device',
+          table: 'sensor',
           filter,
         },
         (payload) => {

@@ -5,6 +5,7 @@ import useGetClassrooms from 'hooks/useGetClassrooms'
 
 function Home() {
   const { classrooms } = useGetClassrooms()
+  console.log(classrooms)
   return (
     <main className="z-[99] flex flex-col items-center">
       <SessionWrapper>
@@ -13,11 +14,11 @@ function Home() {
             {classrooms.map((classroom, i) => {
               return (
                 <div
-                  key={classroom.id}
+                  key={classroom.sensorNumber}
                   className="rounded-2xl bg-slate-200/30 p-20 text-white backdrop-blur-3xl"
                 >
-                  <h1 className="text-3xl">{classroom.classroom}</h1>
-                  <p className="text-xl">{classroom.sound_level}</p>
+                  <h1 className="text-3xl">Sensor number:{classroom.sensorNumber}</h1>
+                  <p className="text-xl">{classroom.data}</p>
                 </div>
               )
             })}
