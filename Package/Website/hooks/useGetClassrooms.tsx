@@ -4,8 +4,13 @@ import { supabase, supabaseFetch } from 'utils/supabase'
 
 interface Classroom {
   idDevice: string
-  sensorNumber: string
-  data: number
+  classroom: string
+  sensor1: string
+  sensor2: string
+  sensor3: string
+  sensor4: string
+  sensor5: string
+  sensor6: string
   created_at: string
 }
 
@@ -16,7 +21,7 @@ function useGetClassrooms() {
 
   const suscribeToChanges = () => {
     if (ids.length === 0) return
-    const filter = `idDevice=in.(${ids.join(',')})`
+    const filter = `id=in.(${ids.join(',')})`
     const channel = supabase
       .channel('schema-db-changes')
       .on(
@@ -24,14 +29,15 @@ function useGetClassrooms() {
         {
           event: '*',
           schema: 'public',
-          table: 'sensor',
+          table: 'device',
           filter,
         },
         (payload) => {
           const updatedDevice = payload.new as Classroom
+          console.log(updatedDevice)
           if (typeof updatedDevice === 'object') setClassrooms([updatedDevice])
           if (typeof updatedDevice !== 'object') {
-            setClassrooms(updatedDevice)
+            setClassrooms([updatedDevice])
           }
         },
       )

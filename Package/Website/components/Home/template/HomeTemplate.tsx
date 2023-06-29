@@ -14,11 +14,16 @@ function Home() {
             {classrooms.map((classroom, i) => {
               return (
                 <div
-                  key={classroom.sensorNumber}
+                  key={classroom.idDevice}
                   className="rounded-2xl bg-slate-200/30 p-20 text-white backdrop-blur-3xl"
                 >
-                  <h1 className="text-3xl">Sensor number:{classroom.sensorNumber}</h1>
-                  <p className="text-xl">{classroom.data}</p>
+                  <h1 className="text-3xl">Classroom:{classroom.classroom}</h1>
+                  <p className="text-xl">{classroom.sensor1}</p>
+                  <p className="text-xl">{classroom.sensor2}</p>
+                  <p className="text-xl">{classroom.sensor3}</p>
+                  <p className="text-xl">{classroom.sensor4}</p>
+                  <p className="text-xl">{classroom.sensor5}</p>
+                  <p className="text-xl">{classroom.sensor6}</p>
                 </div>
               )
             })}

@@ -23,7 +23,7 @@ const int sensorPin = 36;
 
 void fsInit() {
   /* Inicializar LittleFS normalmente. Si falla,
-  intentar hacerlo con autoformateo */
+    intentar hacerlo con autoformateo */
   if (LittleFS.begin()) {
     Serial.println("Filesystem successfully initialized.");
     return;
@@ -176,7 +176,7 @@ void assignBoardId() {
   }
 
   /* Error fatal ya que no se pudo guardar el id del dispositivo.
-  Se reinicia el dispositivo completamente */
+    Se reinicia el dispositivo completamente */
   Serial.println("There was a fatal error trying to save the device id.");
   Serial.printf("Restarting device in %dms...\n", RESTART_DELAY);
   delay(RESTART_DELAY);
@@ -373,18 +373,21 @@ void loop() {
   }
 
   // Example array of sensor data
-  int sensorData[] = {10, 20, 30, 40, 50};
-
-  // Get the length of the array
-  int dataLength = sizeof(sensorData) / sizeof(sensorData[0]);
-
+  int sensorData[] = {random(500), random(500), random(500), random(500), random(500), random(500)};
+  Serial.println(random(500));
   // Initialize the HTTP client
   HTTPClient client;
 
   // Iterate over the array and send each element to the backend
-  for (int i = 0; i < dataLength; i++) {  
-    // Update the sensorid value based on the loop iteration
-    String jsonPayload = "{\"deviceid\":\"" + deviceId + "\",\"sensorid\":" + String(i) + ",\"sound_level\":" + String(sensorData[i]) + "}";
+
+    String jsonPayload = "{\"deviceid\":\"" + deviceId + "\",";
+jsonPayload += "\"sensor1\":" + String(sensorData[0]) + ",";
+jsonPayload += "\"sensor2\":" + String(sensorData[1]) + ",";
+jsonPayload += "\"sensor3\":" + String(sensorData[2]) + ",";
+jsonPayload += "\"sensor4\":" + String(sensorData[3]) + ",";
+jsonPayload += "\"sensor5\":" + String(sensorData[4]) + ",";
+jsonPayload += "\"sensor6\":" + String(sensorData[5]);
+jsonPayload += "}";
 
     // Begin the HTTP request
     client.begin(SUPABASE_URL + "/rest/v1/rpc/handle_sensor");
@@ -398,19 +401,16 @@ void loop() {
     // Check the response code
     if (httpResponseCode > 0) {
       Serial.print("Request ");
-      Serial.print(i);
       Serial.print(" - Response code: ");
       Serial.println(httpResponseCode);
     } else {
       Serial.print("Request ");
-      Serial.print(i);
       Serial.print(" - Response code: ");
       Serial.println(httpResponseCode);
     }
 
     // End the HTTP request
     client.end();
-  }
 
-  delay(1000);
+  delay(5000);
 }
