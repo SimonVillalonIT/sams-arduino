@@ -1,18 +1,41 @@
 import { header } from 'data/LandingPage'
-import React from 'react'
+import Link from 'next/link'
+import useUserStore from 'store/userStore'
 
 function Links() {
-  return (
+  const { loggedIn } = useUserStore((state) => state)
+  return loggedIn ? (
+    <>
+      <div className="z-10 hidden justify-between text-white md:flex">
+        {header.links.map((link, i) => (
+          <Link
+            className="mx-8 border-b-2 border-transparent text-[20px] font-semibold duration-300 hover:border-white"
+            href={link.link}
+            title={link.title}
+            key={i}
+          >
+            {link.text}
+          </Link>
+        ))}
+      </div>
+      <Link
+        className="z-50 hidden cursor-pointer border-2 border-transparent text-lg font-bold text-white duration-300 hover:border-b-2 hover:border-b-white md:block"
+        href="/home"
+      >
+        Ir al dashboard
+      </Link>
+    </>
+  ) : (
     <div className="z-10 hidden justify-between text-white md:flex">
       {header.links.map((link, i) => (
-        <a
+        <Link
           className="mx-8 border-b-2 border-transparent text-[20px] font-semibold duration-300 hover:border-white"
           href={link.link}
           title={link.title}
           key={i}
         >
           {link.text}
-        </a>
+        </Link>
       ))}
     </div>
   )

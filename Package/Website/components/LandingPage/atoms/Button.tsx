@@ -1,3 +1,4 @@
+import Link from 'next/link'
 import React from 'react'
 
 interface ButtonProps {
@@ -20,7 +21,7 @@ function Button({
   onClick,
 }: ButtonProps) {
   return href ? (
-    <a
+    <Link
       href={href}
       id={id}
       className={`relative z-[99] flex h-14 w-80 items-center justify-center rounded-xl bg-secondary text-center font-medium shadow-2xl ${className}`}
@@ -30,7 +31,7 @@ function Button({
       <div className={`absolute ${right ? 'right-8' : 'left-8'} text-2xl`}>
         {children}
       </div>
-    </a>
+    </Link>
   ) : (
     <button
       onClick={onClick}

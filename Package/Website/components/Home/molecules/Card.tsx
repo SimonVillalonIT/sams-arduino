@@ -1,21 +1,14 @@
-import Image from 'next/image'
+import { PropsWithChildren } from "react"
 
 interface card {
   title: string
   text: string
-  img: string
 }
 
-function Card({ title, text, img }: card) {
+function Card({ title, text,children }: PropsWithChildren<card>) {
   return (
-    <article className="flex h-full flex-col items-center justify-evenly bg-slate-200/10 px-2 py-4 shadow-2xl backdrop-blur-2xl">
-      <Image
-        className="h-32 w-32"
-        src={img}
-        width={300}
-        height={300}
-        alt="Icon"
-      />
+    <article className="flex min-h-full flex-col items-center justify-evenly bg-slate-200/10 px-2 py-16 shadow-2xl backdrop-blur-2xl">
+      {children}
       <h1
         className={` text-shadow relative z-10 text-xl font-semibold text-white md:max-w-[150px] md:text-center md:text-2xl`}
       >

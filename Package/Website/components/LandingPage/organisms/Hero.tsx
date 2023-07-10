@@ -5,7 +5,7 @@ import { HeroContent, ClassroomContainer } from '../molecules/'
 
 function Hero() {
   return (
-    <section className="flex h-[calc(100vh-90px)] flex-col bg-primary pt-8 md:px-16">
+    <section className="flex min-h-[calc(100vh-90px)] flex-col bg-primary pt-8 md:px-16">
       <div className="justify-between md:flex">
         <HeroContent />
         <ClassroomContainer />

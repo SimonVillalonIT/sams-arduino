@@ -1,13 +1,20 @@
 'use client'
-import Image from 'next/image'
 import { RefObject, useRef } from 'react'
+import Image from 'next/image'
 import { GiHamburgerMenu } from 'react-icons/gi'
-import useUserStore from 'store/userStore'
+
 import { Links } from '../molecules'
+import MobileNavbar from '../molecules/MobileNavbar'
 
 function Header() {
-  const { loggedIn } = useUserStore((state) => state)
-  const mobileNavbar: RefObject<HTMLDivElement>= useRef(null) 
+  const mobileNavbar: RefObject<HTMLDivElement> = useRef(null)
+
+  const toggleNavbar = () => {
+    mobileNavbar.current?.classList.toggle('translate-x-[100vw]')
+    mobileNavbar.current?.classList.toggle('hidden')
+    mobileNavbar.current?.classList.toggle('flex')
+  }
+
   return (
     <header className="z-99 flex w-full items-center justify-between bg-primary px-8">
       <Image
@@ -17,21 +24,12 @@ function Header() {
         height={300}
         alt="Sams-Logo"
       />
-      {loggedIn ? (
-        <>
-          <Links />
-          <a
-            className="z-50 cursor-pointer border-2 border-transparent text-lg font-bold text-white duration-300 hover:border-b-2 hover:border-b-white"
-            href="/home"
-          >
-            Ir al dashboard
-          </a>
-        </>
-      ) : (
-        <Links />
-      )}
-      <GiHamburgerMenu className="z-10 text-3xl text-secondary md:hidden" onClick={()=>{mobileNavbar.current?.classList.remove("-translate-x-[100vw]"); console.log("Clieckaedo")}} />
-      <div ref={mobileNavbar} className=' w-full min-h-screen bg-red-700 z-[900] fixed duration-500 inset-0 transition-transform -translate-x-[100vw]'>DASDSAD</div>
+      <Links />
+      <GiHamburgerMenu
+        className="z-10 text-3xl text-secondary md:hidden"
+        onClick={toggleNavbar}
+      />
+      <MobileNavbar ref={mobileNavbar} toggle={toggleNavbar} />
     </header>
   )
 }

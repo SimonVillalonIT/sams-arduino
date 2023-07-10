@@ -69,11 +69,11 @@ export interface Database {
         }
         Relationships: [
           {
-            foreignKeyName: "sensor_idDevice_fkey"
-            columns: ["idDevice"]
-            referencedRelation: "device"
-            referencedColumns: ["id"]
-          }
+            foreignKeyName: 'sensor_idDevice_fkey'
+            columns: ['idDevice']
+            referencedRelation: 'device'
+            referencedColumns: ['id']
+          },
         ]
       }
       user_device: {
@@ -97,17 +97,17 @@ export interface Database {
         }
         Relationships: [
           {
-            foreignKeyName: "user_device_id_device_fkey"
-            columns: ["id_device"]
-            referencedRelation: "device"
-            referencedColumns: ["id"]
+            foreignKeyName: 'user_device_id_device_fkey'
+            columns: ['id_device']
+            referencedRelation: 'device'
+            referencedColumns: ['id']
           },
           {
-            foreignKeyName: "user_device_id_user_fkey"
-            columns: ["id_user"]
-            referencedRelation: "users"
-            referencedColumns: ["id"]
-          }
+            foreignKeyName: 'user_device_id_user_fkey'
+            columns: ['id_user']
+            referencedRelation: 'users'
+            referencedColumns: ['id']
+          },
         ]
       }
     }

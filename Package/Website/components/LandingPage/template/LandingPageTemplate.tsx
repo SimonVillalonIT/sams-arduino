@@ -1,4 +1,4 @@
-import { Hero, How, Contact, Footer, Header } from '../organisms'
+import { Hero, How, ContactCard, Footer, Header } from '../organisms'
 import Loader from 'components/Loader/Loader'
 import { Lights } from '../molecules'
 function LandingPageTemplate() {
@@ -10,7 +10,7 @@ function LandingPageTemplate() {
           <Lights />
           <Hero />
           <How />
-          <Contact />
+          <ContactCard />
         </main>
         <Footer />
       </Loader>

@@ -7,7 +7,7 @@ interface lights {
 function Light({ className }: lights) {
   return (
     <div
-      className={`absolute h-72  w-72 opacity-0 blur-[200px] md:opacity-100 ${className}`}
+      className={`absolute hidden  h-72 w-72 blur-[200px] md:flex ${className}`}
     ></div>
   )
 }
