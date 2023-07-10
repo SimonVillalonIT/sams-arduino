@@ -3,7 +3,7 @@ import React, { LegacyRef, forwardRef } from 'react'
 import { ImCross } from 'react-icons/im'
 
 const MobileNavbar = forwardRef(
-  ({toggle}: { toggle: () => void }, ref: LegacyRef<HTMLDivElement>) => {
+  ({ toggle }: { toggle: () => void }, ref: LegacyRef<HTMLDivElement>) => {
     return (
       <div
         ref={ref}
