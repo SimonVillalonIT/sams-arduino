@@ -1,0 +1,7 @@
+#ifndef SECRETS_H
+#define SECRETS_H
+
+String SUPABASE_URL = "https://ltpmkkxjbdpcupjnnheh.supabase.co";
+String SUPABASE_TOKEN = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imx0cG1ra3hqYmRwY3Vwam5uaGVoIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTY4NTQ3MDMyNSwiZXhwIjoyMDAxMDQ2MzI1fQ.FyCA55_zu2GpX4DVxkEGp3VSLXeTBbTE16TZaBHeALk";
+
+#endif

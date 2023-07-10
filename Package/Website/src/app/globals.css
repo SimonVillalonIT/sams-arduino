@@ -7,16 +7,7 @@
   margin: 0;
   padding: 0;
   box-sizing: border-box;
-}
-
-.container {
-  scroll-snap-type: y mandatory;
-  overflow-y: scroll;
-  height: 100vh;
-  min-width: 100vw;
-}
-section {
-  scroll-snap-align: start;
+  scroll-behavior: smooth;
 }
 
 .text-shadow {
@@ -42,3 +33,21 @@ section {
   }
 }
 
+#arrow-down {
+  animation: 2s moveDown linear infinite;
+}
+
+@keyframes moveDown {
+  0% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(15px);
+  }
+  80% {
+    transform: translateY(0px);
+  }
+  100% {
+    transform: translateY(0px);
+  }
+}

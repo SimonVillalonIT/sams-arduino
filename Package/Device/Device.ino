@@ -1,196 +1,194 @@
-/* ---------------------------------------------------------------
-Include require libraries to handle WIFI and EEPROM functions
-connect Push button to switch ESP32 to access point on demand
-For ESP32 connect push button at GPIO4
-and ESP8266 connect push button at GPIO 6
-
-Press push button to continuously till the defined delay in Arduino sketch to make it access point.
-*/
-
-#ifdef ESP8266
-#include <ESP8266WiFi.h> // Pins for board ESP8266 Wemos-NodeMCU
-#include <ESP8266WebServer.h>
-ESP8266WebServer serverAP(80);
-#define accessPointButtonPin D6 // Connect a button to this pin
-#else
+#include <LittleFS.h>
+#include <ArduinoJson.h>
 #include <WiFi.h>
-#include <WebServer.h>
-#define accessPointButtonPin 4 // Connect a button to this pin
-WebServer serverAP(80); // the Access Point Server
-#endif
+#include <HTTPClient.h>
+#include <ESPAsyncWebSrv.h>
 
-#include <EEPROM.h>
-#define accessPointLed 2
-#define eepromTextVariableSize 33 // the max size of the ssid, password etc. 32+null terminated
+#include "secrets.h"
 
-//---------- wifi default settings ------------------
-char ssid[eepromTextVariableSize] = "Simon-esp";
-char pass[eepromTextVariableSize] = "12345678";
+#define WIFI_TIMEOUT 5000  // ms
 
+#define AP_SSID "Sams"
+#define AP_PASSWORD "12345678"
 
-boolean accessPointMode = false; // is true every time the board is started as Access Point
-boolean debug = true;
-unsigned long lastUpdatedTime = 0;
+#define RESTART_DELAY 5000            // ms
+#define FAILED_REQUEST_TIMEOUT 60000  // ms
 
-int pushDownCounter = 0;
-int lastConnectedStatus = 0;
+String deviceId;
+HTTPClient httpClient;
+AsyncWebServer server(80);
+DynamicJsonDocument device(1024);
+char sensorData[128];
+const int sensorPin = 36;
 
-//================================================ initAsAccessPoint
-void initAsAccessPoint() {
-WiFi.softAP("ESP32-Access Point"); // or WiFi.softAP("ESP_Network","Acces Point Password");
-if (debug) Serial.println("AccesPoint IP: " + WiFi.softAPIP().toString());
-Serial.println("Mode= Access Point");
-//WiFi.softAPConfig(local_ip, gateway, subnet); // enable this line to change the default Access Point IP address
-delay(100);
+void fsInit() {
+  /* Inicializar LittleFS normalmente. Si falla,
+    intentar hacerlo con autoformateo */
+  if (LittleFS.begin()) {
+    Serial.println("Filesystem successfully initialized.");
+    return;
+  };
+
+  if (LittleFS.begin(true)) {
+    Serial.println("Filesystem successfully initialized with autoformat.");
+    return;
+  };
+
+  Serial.println("Coulnd not initialize the filesystem.");
 }
 
-//========================================= connect
-void checkWiFiConnection() {
-if (WiFi.status() != WL_CONNECTED) {
-if (lastConnectedStatus == 1) Serial.println("WiFi disconnected\n");
-lastConnectedStatus = 0;
-Serial.print(".");
-delay(500);
-} else {
-if (lastConnectedStatus == 0) {
-Serial.println("Mode= Client");
-Serial.print("\nWiFi connectd to :");
-Serial.println(ssid);
-Serial.print("\n\nIP address: ");
-Serial.println(WiFi.localIP());
+bool wifiConnect(String ssid, String password) {
+  Serial.printf("Establishing WiFi connection to '%s'...\n", ssid.c_str());
 
-}
-lastConnectedStatus = 1;
-}
+  WiFi.begin(ssid, password);
 
-}
-//================================================ setup
-//================================================
-void setup() {
-Serial.begin(115200);
-delay(500);
+  unsigned long startTime = millis();
+  while (millis() - startTime < WIFI_TIMEOUT) {
+    if (WiFi.status() == WL_CONNECTED) {
+      Serial.println("WiFi connection established.");
+      return true;
+    };
 
-//--- Check the first EEPROM byte. If this byte is "2" the board will start as Access Point
-int st = getStatusFromEeprom();
-if (st == 2) accessPointMode = true;
-else if (st != 0) saveSettingsToEEPPROM(ssid, pass); // run the void saveSettingsToEEPPROM on the first running or every time you want to save the default settings to eeprom
-Serial.println("\n\naccessPointMode=" + String(accessPointMode));
+    delay(100);
+  }
 
-readSettingsFromEEPROM(ssid, pass); // read the SSID and Passsword from the EEPROM
-Serial.println(ssid);
-Serial.println(pass);
-if (accessPointMode) { // start as Access Point
-initAsAccessPoint();
-serverAP.on("/", handle_OnConnect);
-serverAP.onNotFound(handle_NotFound);
-serverAP.begin();
-saveStatusToEeprom(0); // enable the Client mode for the the next board starting
-}
-else { // start as client
-Serial.println("Mode= Client");
-WiFi.begin(ssid, pass);
-// Enter your client setup code here
+  Serial.println("Could not establish WiFi connection.");
+  return false;
 }
 
+void wifiInit() {
+  Serial.println("Initializing WiFi connection...");
 
-pinMode(accessPointButtonPin, INPUT);
-pinMode(accessPointLed, OUTPUT);
+  File file = LittleFS.open("/wifi.json");
+  if (!file) {
+    Serial.println("There were no saved WiFi credentials.");
+    return;
+  }
 
+  DynamicJsonDocument doc(512);
+  DeserializationError error = deserializeJson(doc, file);
+  file.close();
+  if (error) {
+    Serial.println("There was an error trying to deserialize the WiFi credentials.");
+    return;
+  }
+
+  wifiConnect(doc["ssid"].as<String>(), doc["password"].as<String>());
+}
+
+bool wifiSave(String ssid, String password) {
+  Serial.println("Saving WiFi credentials...");
+
+  File file = LittleFS.open("/wifi.json", "w+");
+  if (!file) {
+    Serial.println("There was an error trying open the WiFi credentials file.");
+    return false;
+  }
+
+  DynamicJsonDocument doc(512);
+  doc["ssid"] = ssid;
+  doc["password"] = password;
+  bool dumped = serializeJson(doc, file);
+  if (dumped) {
+    Serial.println("WiFi credentials saved successfully.");
+  } else {
+    Serial.println("There was an error trying to save the WiFi credentials.");
+  }
+
+  file.close();
+  return dumped;
+}
+
+bool saveDeviceId() {
+  Serial.println("Saving device id...");
+
+  File file = LittleFS.open("/deviceId.txt", "w+");
+  if (!file) {
+    Serial.println("There was an error trying open the device id file.");
+    return false;
+  }
+
+  file.print(deviceId);
+  file.close();
+
+  return true;
+}
+void assignBoardId() {
+
+  Serial.println("Getting device id...");
+
+  File file = LittleFS.open("/deviceId.txt");
+  if (file) {
+    deviceId = file.readStringUntil('\n');
+    file.close();
+
+    Serial.printf("Device id: '%s'.\n", deviceId.c_str());
+    return;
+  }
+
+
+  HTTPClient http;
+  String url = SUPABASE_URL + "/rest/v1/rpc/insert_device_and_return_id";
+
+  http.begin(url);
+  http.addHeader("Authorization", "Bearer " + SUPABASE_TOKEN);
+  http.addHeader("apikey", SUPABASE_TOKEN);
+  http.addHeader("Accept", "application/json");
+
+
+  int httpResponseCode = http.POST("{}");
+
+  if (httpResponseCode == 200) {
+    String response = http.getString();
+    Serial.println("Response: " + response);
+
+    // Parse JSON response
+    StaticJsonDocument<256> jsonDocument;
+    DeserializationError error = deserializeJson(jsonDocument, response);
+
+    if (error) {
+      Serial.println("Error parsing JSON.");
+      return;
+    }
+
+    // Extract "id" value
+    JsonArray idArray = jsonDocument.as<JsonArray>();
+    JsonObject idObject = idArray[0];
+    deviceId = idObject["id"].as<String>();
+
+    Serial.println("Device ID: " + deviceId);
+  } else {
+    Serial.print("Error code: ");
+    Serial.println(httpResponseCode);
+  }
+
+  http.end();
+
+  if (!deviceId) {
+    Serial.println("There was an error trying to generate the device id.");
+    return;
+  }
+
+  bool saved = saveDeviceId();
+  if (saved) {
+    Serial.println("Device id saved successfully.");
+    return;
+  }
+
+  /* Error fatal ya que no se pudo guardar el id del dispositivo.
+    Se reinicia el dispositivo completamente */
+  Serial.println("There was a fatal error trying to save the device id.");
+  Serial.printf("Restarting device in %dms...\n", RESTART_DELAY);
+  delay(RESTART_DELAY);
+  ESP.restart();
 }
 
 
-//============================================== loop
-//==============================================
-void loop() {
-if (accessPointMode) {
-serverAP.handleClient();
-playAccessPointLed(); // blink the LED every time the board works as Access Point
-}
-else {
-checkWiFiConnection();
 
+void handleServerRootRoute(AsyncWebServerRequest *request) {
+  Serial.printf("[WebServer]: GET / @%s\n", request->client()->remoteIP().toString().c_str());
 
-// enter your client code here
-
-if (millis() - lastUpdatedTime > 5000) {
-lastUpdatedTime = millis();
-}
-}
-checkIfModeButtonPushed();
-}
-
-//============================================
-//--- Mode selector Button - push down handler
-void checkIfModeButtonPushed() {
-while (digitalRead(accessPointButtonPin)) {
-pushDownCounter++;
-if (debug) Serial.println(pushDownCounter);
-delay(1000);
-if (pushDownCounter == 10) { // after 2 seconds the board will be restarted
-if (!accessPointMode) saveStatusToEeprom(2); // write the number 2 to the eeprom
-ESP.restart();
-}
-}
-pushDownCounter = 0;
-}
-
-//============================================ playAccessPointLed
-unsigned long lastTime = 0;
-void playAccessPointLed() {
-if (millis() - lastTime > 300) {
-lastTime = millis();
-digitalWrite(accessPointLed, !digitalRead(accessPointLed));
-}
-}
-
-//================ WiFi Manager necessary functions ==============
-//================================================================
-//================================================================
-
-//==============================================
-void handle_OnConnect() {
-if (debug) Serial.println("Client connected: args=" + String(serverAP.args()));
-if (serverAP.args() >= 2) {
-handleGenericArgs();
-serverAP.send(200, "text/html", SendHTML(1));
-}
-else serverAP.send(200, "text/html", SendHTML(0));
-}
-
-//==============================================
-void handle_NotFound() {
-if (debug) Serial.println("handle_NotFound");
-serverAP.send(404, "text/plain", "Not found");
-}
-
-//=================================
-void handleGenericArgs() { //Handler
-for (int i = 0; i < serverAP.args(); i++) {
-if (debug) Serial.println("*** arg(" + String(i) + ") =" + serverAP.argName(i));
-if (serverAP.argName(i) == "ssid") {
-if (debug) Serial.print("sizeof(ssid)="); Serial.println(sizeof(ssid));
-memset(ssid, '\0', sizeof(ssid));
-strcpy(ssid, serverAP.arg(i).c_str());
-}
-else if (serverAP.argName(i) == "pass") {
-if (debug) Serial.print("sizeof(pass)="); Serial.println(sizeof(pass));
-memset(pass, '\0', sizeof(pass));
-strcpy(pass, serverAP.arg(i).c_str());
-}
-}
-if (debug) Serial.println("*** New settings have received");
-if (debug) Serial.print("*** ssid="); Serial.println(ssid);
-if (debug) Serial.print("*** password="); Serial.println(pass);
-
-
-
-
-saveSettingsToEEPPROM(ssid, pass);
-
-}
-//===================================
-String SendHTML(uint8_t st) {
-  String ptr = R"(<!DOCTYPE html>
+  String rootHTML = R"(<!DOCTYPE html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
@@ -288,15 +286,18 @@ String SendHTML(uint8_t st) {
   <body>
     <section>
       <div class="form-box">
+      )";
+  rootHTML += "<span>deviceId: '" + deviceId + "'</span>";
+  rootHTML += R"(
         <div class="form-value">
-          <form>
+          <form action="/wifi" method="POST">
             <h2>Configurar red</h2>
             <div class="inputbox">
               <input id="pass_id" type="text" name="ssid" required />
               <label for="">SSID</label>
             </div>
             <div class="inputbox">
-              <input type="password" id="ssid_id" name="pass" required />
+              <input type="password" id="password" name="password" required />
               <label for="">Contraseña</label>
             </div>
             <button>Enviar</button>
@@ -309,68 +310,107 @@ String SendHTML(uint8_t st) {
 
 )";
 
-  return ptr;
-  
+  request->send(200, "text/html", rootHTML);
+}
+
+void handleServerWifiRoute(AsyncWebServerRequest *request) {
+  Serial.printf("[WebServer]: POST /wifi @%s\n", request->client()->remoteIP().toString().c_str());
+
+  if (!request->hasParam("ssid", true) || !request->hasParam("password", true)) {
+    return request->send(400, "text/plain", "Invalid request.");
+  }
+
+  String ssid = request->getParam("ssid", true)->value();
+  String password = request->getParam("password", true)->value();
+
+  bool connected = wifiConnect(ssid, password);
+  if (!connected) {
+    return request->send(401, "text/plain", "Invalid WiFi credentials.");
+  }
+
+  bool saved = wifiSave(ssid, password);
+  if (!saved) {
+    return request->send(500, "text/plain", "There was an internal server error trying to save the WiFi credentials.");
+  }
+
+  request->send(200, "text/plain", "WiFi successfully connected and saved.");
 }
 
 
+void setup() {
+  Serial.begin(115200);
 
-//====================== EEPROM necessary functions ==============
-//================================================================
-//================================================================
-#define eepromBufferSize 200 // have to be > eepromTextVariableSize * (eepromVariables+1) (33 * (5+1))
+  // Inicializar sistema de archivos
+  fsInit();
 
-//========================================== writeDefaultSettingsToEEPPROM
-void saveSettingsToEEPPROM(char* ssid_, char* pass_) {
-if (debug) Serial.println("\n============ saveSettingsToEEPPROM");
-writeEEPROM(1 * eepromTextVariableSize , eepromTextVariableSize , ssid_);
-writeEEPROM(2 * eepromTextVariableSize , eepromTextVariableSize , pass_);
-}
-//========================================== readSettingsFromEeprom
-void readSettingsFromEEPROM(char* ssid_, char* pass_) {
-readEEPROM( 1 * eepromTextVariableSize , eepromTextVariableSize , ssid_);
-readEEPROM( (2 * eepromTextVariableSize) , eepromTextVariableSize , pass_);
+  // Inicializar WiFi desde el archivo guardado
+  wifiInit();
 
+  // Obtener el id del dispositivo
+  assignBoardId();
 
+  analogReadResolution(12);  // Set ADC resolution to 12 bits (0-4095)
+  analogSetAttenuation(ADC_11db);
 
-
-if (debug) Serial.println("\n============ readSettingsFromEEPROM");
-if (debug) Serial.print("\n============ ssid="); if (debug) Serial.println(ssid_);
-if (debug) Serial.print("============ password="); if (debug) Serial.println(pass_);
-
-
+  // Inicializar punto de acceso y servidor web
+  WiFi.softAP(AP_SSID, AP_PASSWORD);
+  server.on("/", HTTP_GET, handleServerRootRoute);
+  server.on("/wifi", HTTP_POST, handleServerWifiRoute);
+  server.begin();
 }
 
-//================================================================
-void writeEEPROM(int startAdr, int length, char* writeString) {
-EEPROM.begin(eepromBufferSize);
-yield();
-for (int i = 0; i < length; i++) EEPROM.write(startAdr + i, writeString[i]);
-EEPROM.commit();
-EEPROM.end();
-}
+void loop() {
+  // Esperar hasta que tenga conexión WiFi
+  if (WiFi.status() != WL_CONNECTED) {
+    delay(100);
+    return;
+  }
 
-//================================================================
-void readEEPROM(int startAdr, int maxLength, char* dest) {
-EEPROM.begin(eepromBufferSize);
-delay(10);
-for (int i = 0; i < maxLength; i++) dest[i] = char(EEPROM.read(startAdr + i));
-dest[maxLength - 1] = 0;
-EEPROM.end();
-}
+  // Si no tengo la id del dispositivo, la obtengo
+  if (deviceId.isEmpty()) {
+    assignBoardId();
+    return;
+  }
 
-//================================================================ writeEepromSsid
-void saveStatusToEeprom(byte value) {
-EEPROM.begin(eepromBufferSize);
-EEPROM.write(0, value);
-EEPROM.commit();
-EEPROM.end();
-}
-//===================================================================
-byte getStatusFromEeprom() {
-EEPROM.begin(eepromBufferSize);
-byte value = 0;
-value = EEPROM.read (0);
-EEPROM.end();
-return value;
+  // Example array of sensor data
+  int sensorData[] = {random(500), random(500), random(500), random(500), random(500), random(500)};
+  Serial.println(random(500));
+  // Initialize the HTTP client
+  HTTPClient client;
+
+  // Iterate over the array and send each element to the backend
+
+    String jsonPayload = "{\"deviceid\":\"" + deviceId + "\",";
+jsonPayload += "\"sensor1\":" + String(sensorData[0]) + ",";
+jsonPayload += "\"sensor2\":" + String(sensorData[1]) + ",";
+jsonPayload += "\"sensor3\":" + String(sensorData[2]) + ",";
+jsonPayload += "\"sensor4\":" + String(sensorData[3]) + ",";
+jsonPayload += "\"sensor5\":" + String(sensorData[4]) + ",";
+jsonPayload += "\"sensor6\":" + String(sensorData[5]);
+jsonPayload += "}";
+
+    // Begin the HTTP request
+    client.begin(SUPABASE_URL + "/rest/v1/rpc/handle_sensor");
+    client.addHeader("Authorization", "Bearer " + SUPABASE_TOKEN);
+    client.addHeader("apikey", SUPABASE_TOKEN);
+    client.addHeader("Content-Type", "application/json");
+
+    // Send the POST request
+    int httpResponseCode = client.POST(jsonPayload);
+
+    // Check the response code
+    if (httpResponseCode > 0) {
+      Serial.print("Request ");
+      Serial.print(" - Response code: ");
+      Serial.println(httpResponseCode);
+    } else {
+      Serial.print("Request ");
+      Serial.print(" - Response code: ");
+      Serial.println(httpResponseCode);
+    }
+
+    // End the HTTP request
+    client.end();
+
+  delay(5000);
 }

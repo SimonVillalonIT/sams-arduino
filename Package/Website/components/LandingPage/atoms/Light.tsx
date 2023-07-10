@@ -5,7 +5,11 @@ interface lights {
 }
 
 function Light({ className }: lights) {
-  return <div className={`w-72 h-72 absolute blur-[200px] ${className}`}></div>
+  return (
+    <div
+      className={`absolute hidden  h-72 w-72 blur-[200px] md:flex ${className}`}
+    ></div>
+  )
 }
 
 export default Light

@@ -1,20 +1,19 @@
 'use client'
+import useLoadingStore from 'store/loading.store'
 import './Loader.css'
 import Spinner from './Spinner'
-import { PropsWithChildren, useEffect, useState } from 'react'
+import { PropsWithChildren, useEffect } from 'react'
 
 function Loader({ children }: PropsWithChildren) {
-  const [loading, setLoading] = useState(true)
+  const { loading, setLoading } = useLoadingStore((state) => state)
   useEffect(() => {
-    setTimeout(() => {
-      setLoading(false)
-    }, 3000)
+    setLoading(false)
   }, [])
 
   return (
     <>
       {loading ? (
-        <div className="fixed w-full min-h-[90vh] flex justify-center items-center">
+        <div className="fixed flex min-h-[calc(100vh-90px)] w-full items-center justify-center">
           <Spinner />
         </div>
       ) : (

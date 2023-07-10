@@ -1,12 +1,20 @@
-import { Hero, How, Contact } from '../organisms'
-
+import { Hero, How, ContactCard, Footer, Header } from '../organisms'
+import Loader from 'components/Loader/Loader'
+import { Lights } from '../molecules'
 function LandingPageTemplate() {
   return (
-    <main>
-      <Hero />
-      <How />
-      <Contact />
-    </main>
+    <>
+      <Loader>
+        <Header />
+        <main>
+          <Lights />
+          <Hero />
+          <How />
+          <ContactCard />
+        </main>
+        <Footer />
+      </Loader>
+    </>
   )
 }
 

@@ -1,6 +1,6 @@
 import { create } from 'zustand'
 import { persist } from 'zustand/middleware'
-import { supabase } from 'utils/auth'
+import { supabase } from 'utils/supabase'
 import { Provider, Session } from '@supabase/supabase-js'
 
 interface UserStoreState {
@@ -20,13 +20,12 @@ const useUserStore = create<UserStoreState>()(
       setSession: (value) => set(() => ({ session: value })),
       setLoggedIn: (value) => set(() => ({ loggedIn: value })),
       signIn: async (provider) => {
-        const { data, error } = await supabase.auth.signInWithOAuth({
+        await supabase.auth.signInWithOAuth({
           provider: provider,
           options: {
-            redirectTo: 'http://localhost:3000/home',
+            redirectTo: `${location.origin}/home`,
           },
         })
-        get().setLoggedIn(true)
       },
       signOut: () => {
         get().setLoggedIn(false)
