@@ -1,3 +1,4 @@
+"use client"
 import { Dispatch, SetStateAction } from 'react'
 import { FaGoogle, FaGithub } from 'react-icons/fa'
 import { RxCross1 } from 'react-icons/rx'

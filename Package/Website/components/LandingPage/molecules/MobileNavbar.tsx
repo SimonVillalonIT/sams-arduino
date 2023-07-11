@@ -14,9 +14,6 @@ const MobileNavbar = forwardRef(
           onClick={toggle}
         />
         <div className="text-center text-2xl font-bold text-white">
-          <a className="block pb-4" href="/home">
-            Ir al dashboard
-          </a>
           {header.links.map((link, i) => (
             <a
               className="block pb-4"
