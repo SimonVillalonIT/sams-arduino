@@ -1,5 +1,5 @@
 import "styles/globals.css";
-import {Header} from "components"
+import { Header, Footer } from "components";
 
 export const metadata = {
   title: "Sams",
@@ -12,12 +12,11 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en">
+    <html lang="en" className="scroll-smooth">
       <body>
-          <Header />
-        <main>
-          {children}
-        </main>
+        <Header />
+        {children}
+        <Footer />
       </body>
     </html>
   );

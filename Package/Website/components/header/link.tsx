@@ -8,7 +8,7 @@ interface Props {
 
 function Link({ href, title, text }: Props) {
   return (
-    <li title={title} >
+    <li title={title}>
       <a href={href}>{text}</a>
     </li>
   );
