@@ -1,7 +1,7 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
 
-type Theme = "corporate" | "night";
+type Theme = "emerald" | "night";
 
 interface Store {
   theme: Theme;
@@ -9,18 +9,13 @@ interface Store {
 
 interface Actions {
   setTheme: (value: Theme) => void;
-  toggleTheme: () => void;
 }
 
 const useThemeStore = create<Store & Actions>()(
   persist(
-    (set, get) => ({
-      theme: "corporate",
+    (set) => ({
+      theme: "emerald",
       setTheme: (value) => set(() => ({ theme: value })),
-      toggleTheme: () =>
-        get().theme === "corporate"
-          ? get().setTheme("night")
-          : get().setTheme("corporate"),
     }),
     {
       name: "theme-storage",

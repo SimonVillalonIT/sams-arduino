@@ -3,16 +3,20 @@ import useThemeStore from "store/themeStore";
 import { useEffect } from "react";
 
 function ToggleTheme({ className }: { className?: string }) {
-  const { theme, toggleTheme } = useThemeStore();
+  const { theme, setTheme } = useThemeStore();
   
   useEffect(() => {
-    document.querySelector("html")?.setAttribute("data-theme", theme);
+	const body = document.body
+	body.setAttribute("data-theme", theme)
   }, [theme]);
 
+  const toggleTheme = () => {
+    theme === "emerald" ? setTheme("night") : setTheme("emerald");
+  };
   return (
     <label className={`swap swap-rotate ${className}`}>
       <input
-        checked={theme === "corporate" ? false : true}
+        checked={theme === "emerald" ? false : true}
         onChange={toggleTheme}
         type="checkbox"
       />
