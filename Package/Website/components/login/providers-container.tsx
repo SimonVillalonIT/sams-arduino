@@ -1,3 +1,4 @@
+"use client";
 import ProviderButton from "./provider-button";
 import { BiLogoGithub, BiLogoGoogle } from "react-icons/bi";
 
@@ -9,8 +10,8 @@ const ProvidersContainer = () => (
       <hr className="w-full" />
     </div>
     <div className="my-6 space-y-2">
-      <ProviderButton icon={BiLogoGoogle} text="Google" />
-      <ProviderButton icon={BiLogoGithub} text="GitHub" />
+      <ProviderButton provider="google" icon={BiLogoGoogle} text="Google" />
+      <ProviderButton provider="github" icon={BiLogoGithub} text="GitHub" />
     </div>
   </>
 );

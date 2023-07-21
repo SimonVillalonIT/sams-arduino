@@ -7,10 +7,7 @@ interface ChangeLinkProps {
 const ChangeLink = ({ href, text, linkText }: ChangeLinkProps) => (
   <span>
     {text}
-    <a
-      href={href}
-      className="ml-2 text-secondary  hover:underline"
-    >
+    <a href={href} className="ml-2 text-secondary  hover:underline">
       {linkText}
     </a>
   </span>

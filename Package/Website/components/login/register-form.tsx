@@ -1,20 +1,61 @@
-import useAuthStore from "@/store/authStore";
 import { Input, ConfirmButton, ChangeLink } from ".";
+import { Form, Formik, FormikHelpers } from "formik";
+import { validationSchema } from "@/utils/yup";
+import useAuth from "@/hooks/useAuth";
+
+interface Values {
+  email: string;
+  password: string;
+  "re-password": string;
+}
 
 const RegisterForm = () => {
-  const { setToggle } = useAuthStore();
+  const { signUp } = useAuth();
   return (
-    <>
-      <Input text="Nombre de usuario" name="name" />
-      <Input text="Correo electronico" name="email" type="email" />
-      <ConfirmButton onClick={setToggle} text="Registrarse" />
-      <ChangeLink
-        href="/login"
-        text="Ya tienes una cuenta?"
-        linkText="Inicia sesión aquí"
-      />
-    </>
+    <Formik
+      className="mt-6 animate-fadeInLeft"
+      validationSchema={validationSchema}
+      initialValues={{
+        email: "",
+        password: "",
+        "re-password": "",
+      }}
+      onSubmit={(values: Values, { setSubmitting }: FormikHelpers<Values>) => {
+        signUp({ email: values.email, password: values.password });
+      }}
+    >
+      {({ errors, isValid, isSubmitting, isValidating }) => (
+        <Form>
+          <Input
+            error={errors.email}
+            text="Correo electronico"
+            name="email"
+            type="email"
+          />
+          <Input
+            error={errors.password}
+            text="Ingresa tu contraseña"
+            type="password"
+            name="password"
+          />
+          <Input
+            error={errors["re-password"]}
+            text="Confirma tu contraseña"
+            type="password"
+            name="re-password"
+          />
+          <ConfirmButton
+            disabled={!isValid || isSubmitting || isValidating}
+            text="Registrarse"
+          />
+          <ChangeLink
+            href="/login"
+            text="Ya tienes una cuenta?"
+            linkText="Inicia sesión aquí"
+          />
+        </Form>
+      )}
+    </Formik>
   );
 };
-
 export default RegisterForm;

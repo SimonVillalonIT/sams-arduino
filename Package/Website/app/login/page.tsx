@@ -1,10 +1,11 @@
+"use client";
 import {
   PageContainer,
   ProvidersContainer,
   FormContainer,
   LoginForm,
+  LoginSvg,
 } from "components/login";
-import LoginSvg from "@/components/login/login-svg";
 
 function loginPage() {
   return (
