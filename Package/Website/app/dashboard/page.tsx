@@ -1,3 +1,8 @@
+"use client";
+import { usePathname } from "next/navigation";
+import { HiAdjustments, HiCalculator } from "react-icons/hi";
+
 export default function DashboardPage() {
-  return <h1>Hello world</h1>;
+  const path = usePathname();
+  return <h1>DashboardPage</h1>;
 }

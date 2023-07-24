@@ -32,7 +32,7 @@ const data = {
     paragraph: "Tu solucion a las aulas con ruidos molestos",
     button: {
       text: "Empieza ya!",
-      href: "/login",
+      href: "/auth/login",
     },
   },
   features: {

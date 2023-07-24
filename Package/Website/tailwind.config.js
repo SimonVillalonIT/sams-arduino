@@ -11,6 +11,12 @@ module.exports = {
   theme: {
     extend: {
       keyframes: {
+        fadeOut: {
+          "0%": { opacity: "1" },
+          "90%": { opacity: "1" },
+          "99%": { opacity: "0" },
+          "100%": { opacity: "0", display: "none" },
+        },
         fadeInLeft: {
           "0%": {
             opacity: "0",
@@ -24,6 +30,7 @@ module.exports = {
       },
       animation: {
         fadeInLeft: "fadeInLeft .5s forwards",
+        fadeOut: "fadeOut 5s ease-in-out",
       },
       backgroundImage: {
         "gradient-radial": "radial-gradient(var(--tw-gradient-stops))",

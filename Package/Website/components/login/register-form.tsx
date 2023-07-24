@@ -1,7 +1,7 @@
 import { Input, ConfirmButton, ChangeLink } from ".";
 import { Form, Formik, FormikHelpers } from "formik";
 import { validationSchema } from "@/utils/yup";
-import useAuth from "@/hooks/useAuth";
+import useAuth from "hooks/useAuth";
 
 interface Values {
   email: string;
@@ -21,7 +21,11 @@ const RegisterForm = () => {
         "re-password": "",
       }}
       onSubmit={(values: Values, { setSubmitting }: FormikHelpers<Values>) => {
-        signUp({ email: values.email, password: values.password });
+        signUp({
+          email: values.email,
+          password: values.password,
+        });
+        setSubmitting(false);
       }}
     >
       {({ errors, isValid, isSubmitting, isValidating }) => (
@@ -49,7 +53,7 @@ const RegisterForm = () => {
             text="Registrarse"
           />
           <ChangeLink
-            href="/login"
+            href="/auth/login"
             text="Ya tienes una cuenta?"
             linkText="Inicia sesión aquí"
           />

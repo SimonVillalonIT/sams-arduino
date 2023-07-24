@@ -1,8 +1,7 @@
 "use client";
-import { FormContainer, ProvidersContainer } from "components/login";
+import { FormContainer } from "components/login";
 import RegisterForm from "@/components/login/register-form";
-import useAuthStore from "@/store/authStore";
-import { LoginSvg, PasswordContainer, PageContainer } from "components/login";
+import { LoginSvg, PageContainer } from "components/login";
 
 function RegisterPage() {
   return (
@@ -13,7 +12,6 @@ function RegisterPage() {
       >
         <RegisterForm />
       </FormContainer>
-
       <LoginSvg />
     </PageContainer>
   );

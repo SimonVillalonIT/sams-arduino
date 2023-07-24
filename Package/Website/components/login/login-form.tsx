@@ -18,7 +18,11 @@ const LoginForm = () => {
         password: "",
       }}
       onSubmit={(values: Values, { setSubmitting }: FormikHelpers<Values>) => {
-        signIn({ email: values.email, password: values.password });
+        signIn({
+          email: values.email,
+          password: values.password,
+        });
+        setSubmitting(false);
       }}
     >
       {({ errors, isValid, isSubmitting, isValidating }) => (
@@ -40,7 +44,7 @@ const LoginForm = () => {
             text="Iniciar sesión"
           />
           <ChangeLink
-            href="/register"
+            href="/auth/register"
             text="No tienes una cuenta?"
             linkText="Registrate!"
           />
