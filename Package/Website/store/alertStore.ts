@@ -1,6 +1,6 @@
 import { create } from "zustand";
 
-export type AlertType = "warning" | "error" | "success" | "info";
+export type AlertType = "warning" | "error" | "success" | "info"
 
 export type Alert = {
   message: null | string;
@@ -16,7 +16,7 @@ interface Actions {
 }
 
 const useAlertStore = create<Store & Actions>((set) => ({
-  alert: { message: null },
+  alert: { message: null  },
   setAlert: (alert) => set({ alert }),
 }));
 

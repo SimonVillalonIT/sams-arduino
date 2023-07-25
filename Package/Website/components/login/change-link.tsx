@@ -1,3 +1,5 @@
+import Link from "next/link";
+
 interface ChangeLinkProps {
   href: string;
   text: string;
@@ -7,9 +9,9 @@ interface ChangeLinkProps {
 const ChangeLink = ({ href, text, linkText }: ChangeLinkProps) => (
   <span>
     {text}
-    <a href={href} className="ml-2 text-secondary  hover:underline">
+    <Link href={href} className="ml-2 text-secondary  hover:underline">
       {linkText}
-    </a>
+    </Link>
   </span>
 );
 
