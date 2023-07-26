@@ -1,14 +1,11 @@
-"use client";
-import IconLink from "@/components/dashboard/IconLink";
-import { HiCalculator, HiAdjustments, HiHome } from "react-icons/hi";
+import { Navigation, BottomNavigation } from "components/dashboard";
 
 export default function Layout({ children }: { children: React.ReactNode }) {
   return (
     <div>
-      <IconLink href="/dashboard" icon={HiHome} />
-      <IconLink href="/dashboard/config" icon={HiAdjustments} />
-      <IconLink href="/dashboard/devices" icon={HiCalculator} />
+      <Navigation />
       {children}
+      <BottomNavigation />
     </div>
   );
 }
