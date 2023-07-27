@@ -1,13 +1,14 @@
 "use client";
 interface ConfirmButtonProps {
   text: string;
-  onClick?: () => void;
+  disabled?: boolean;
 }
 
-const ConfirmButton = ({ text, onClick }: ConfirmButtonProps) => (
+const ConfirmButton = ({ text, disabled }: ConfirmButtonProps) => (
   <button
-    onClick={onClick ? () => onClick() : () => null}
+    type="submit"
     className="btn btn-accent mt-4 w-full mb-2"
+    disabled={disabled}
   >
     {text}
   </button>

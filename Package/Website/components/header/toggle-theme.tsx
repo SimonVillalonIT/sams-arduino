@@ -4,10 +4,10 @@ import { useEffect } from "react";
 
 function ToggleTheme({ className }: { className?: string }) {
   const { theme, setTheme } = useThemeStore();
-  
+
   useEffect(() => {
-	const body = document.body
-	body.setAttribute("data-theme", theme)
+    const body = document.body;
+    body.setAttribute("data-theme", theme);
   }, [theme]);
 
   const toggleTheme = () => {

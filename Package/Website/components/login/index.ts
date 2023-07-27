@@ -8,4 +8,3 @@ export { default as LoginSvg } from "./login-svg";
 export { default as ChangeLink } from "./change-link";
 export { default as ConfirmButton } from "./confirm-button";
 export { default as PageContainer } from "./page-container";
-export { default as PasswordContainer } from "./password-container";

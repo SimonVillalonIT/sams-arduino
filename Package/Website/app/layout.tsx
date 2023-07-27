@@ -1,5 +1,4 @@
 import "styles/globals.css";
-import { Header, Footer } from "components";
 
 export const metadata = {
   title: "Sams",
@@ -13,11 +12,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" className="scroll-smooth">
-      <body>
-        <Header />
-        {children}
-        <Footer />
-      </body>
+      <body>{children}</body>
     </html>
   );
 }

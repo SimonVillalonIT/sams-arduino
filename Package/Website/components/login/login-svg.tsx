@@ -6,6 +6,7 @@ const SvgComponent = (props: any) => (
     height={488}
     fill="none"
     {...props}
+    className="hidden lg:block"
   >
     <path
       className="fill-secondary"

@@ -3,8 +3,20 @@ import { SiGoogleclassroom } from "react-icons/si";
 import { AiOutlineUserAdd } from "react-icons/ai";
 import { MdSensors } from "react-icons/md";
 import { BsFillGearFill } from "react-icons/bs";
+import { HiCog, HiOutlineStatusOnline, HiOutlineHome } from "react-icons/hi";
 
 const data = {
+  header: {
+    links: [
+      { href: "/dashboard", text: "Inicio", icon: HiOutlineHome },
+      {
+        href: "/dashboard/devices",
+        text: "Dispositivos",
+        icon: HiOutlineStatusOnline,
+      },
+      { href: "/dashboard/config", text: "Configuración", icon: HiCog },
+    ],
+  },
   title: "¡Bienvenido a SAMS, conecta tus dispositivos para comenzar!",
   cards: [
     {
