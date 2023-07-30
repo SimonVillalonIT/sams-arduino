@@ -1,6 +1,6 @@
 import { Field } from "formik";
 
-interface InputProps {
+export interface InputProps {
   name: string;
   text: string;
   type?: string;

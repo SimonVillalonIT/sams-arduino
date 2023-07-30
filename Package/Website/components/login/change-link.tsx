@@ -1,6 +1,6 @@
 import Link from "next/link";
 
-interface ChangeLinkProps {
+export interface ChangeLinkProps {
   href: string;
   text: string;
   linkText: string;

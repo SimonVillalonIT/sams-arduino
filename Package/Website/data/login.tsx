@@ -1,6 +1,6 @@
 import { HTMLInputTypeAttribute } from "react";
 
-interface data {
+export interface LoginData {
   inputs: {
     text: string;
     name: "email" | "password";
@@ -10,7 +10,7 @@ interface data {
   link: { href: string; text: string; linkText: string };
 }
 
-const data: data = {
+const data: LoginData = {
   inputs: [
     {
       text: "Correo Electrónico",
