@@ -1,7 +1,7 @@
 "use client";
 import { FormContainer } from "components/login";
 import { LoginSvg, PageContainer } from "components/login";
-import AuthForm from "@/components/login/form";
+import AuthForm from "@/components/login/auth-form";
 import data from "@/data/register";
 import { validationSchema } from "@/utils/yup";
 import useAuth from "@/hooks/useAuth";

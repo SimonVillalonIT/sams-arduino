@@ -1,5 +1,5 @@
 "use client";
-import AuthForm from "@/components/login/form";
+import AuthForm from "@/components/login/auth-form";
 import {
   PageContainer,
   ProvidersContainer,

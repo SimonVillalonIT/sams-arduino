@@ -6,11 +6,12 @@ import data from "data/dashboard";
 import HeaderLink from "./header-link";
 
 const Navigation = () => {
-  type path = "config" | "devices" | "dashboard";
+  type path = "config" | "devices" | "dashboard" | "create";
   const paths = {
     config: "Configuración",
     devices: "Dispositivos",
     dashboard: "Inicio",
+    create: "Crear",
   };
   const path = usePathname().split("/").pop() as path;
 
@@ -22,8 +23,8 @@ const Navigation = () => {
           <details>
             <summary className="min-w-[135px]">{paths[path]}</summary>
             <ul className="p-2 bg-base-100">
-              {header.links.map((link) => (
-                <HeaderLink {...link} />
+              {header.links.map((link, i) => (
+                <HeaderLink key={i} {...link} />
               ))}
               <Logout />
             </ul>

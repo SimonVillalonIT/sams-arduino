@@ -1,8 +1,8 @@
 import { Input, ConfirmButton, ChangeLink } from ".";
 import { Form, Formik, FormikValues, FormikHelpers } from "formik";
 import { ObjectSchema } from "yup";
-import { LoginData } from "data/login";
-import { RegisterData } from "data/register";
+import { LoginData } from "@/data/login";
+import { RegisterData } from "@/data/register";
 
 interface AuthFormProps<T extends FormikValues> {
   data: LoginData | RegisterData;

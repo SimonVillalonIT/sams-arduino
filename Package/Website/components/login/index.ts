@@ -1,6 +1,4 @@
 export { default as Input } from "./input";
-export { default as LoginForm } from "./login-form";
-export { default as RegisterForm } from "./register-form";
 export { default as FormContainer } from "./form-container";
 export { default as ProviderButton } from "./provider-button";
 export { default as ProvidersContainer } from "./providers-container";
