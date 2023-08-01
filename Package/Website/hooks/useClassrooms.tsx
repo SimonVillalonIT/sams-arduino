@@ -3,21 +3,22 @@ import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 import { getUserId } from "@/utils/supabase";
 
 export interface Classroom {
-  idDevice: string;
-  classroom: string;
-  sensor1: string;
-  sensor2: string;
-  sensor3: string;
-  sensor4: string;
-  sensor5: string;
-  sensor6: string;
+  id: string;
   created_at: string;
+  classroom: string;
+  sensor1: number | null;
+  sensor2: number | null;
+  sensor3: number | null;
+  sensor4: number | null;
+  sensor5: number | null;
+  sensor6: number | null;
+  active: boolean;
 }
 
 export default function useClassrooms() {
   const supabase = createClientComponentClient<Database>();
-  const [ids, setIds] = useState<string[] | undefined>([]);
-  const [classrooms, setClassrooms] = useState<Classroom[] | undefined>([]);
+  const [classrooms, setClassrooms] = useState<Classroom[] | null>([]);
+  const [ids, setIds] = useState<string[] | []>([]);
 
   const suscribeToChanges = () => {
     if (ids?.length === 0) return;
@@ -34,11 +35,7 @@ export default function useClassrooms() {
         },
         (payload) => {
           const updatedDevice = payload.new as Classroom;
-          console.log(updatedDevice);
-          if (typeof updatedDevice === "object") setClassrooms([updatedDevice]);
-          if (typeof updatedDevice !== "object") {
-            setClassrooms([updatedDevice]);
-          }
+          setClassrooms([{ ...updatedDevice, active: true }]);
         },
       )
       .subscribe();
@@ -54,10 +51,8 @@ export default function useClassrooms() {
       const { data } = await supabase.rpc("get_devices_by_user_id", {
         id_user: userId,
       });
-      const updatedIds = data?.map(
-        (device: { device_id: string }) => device.device_id,
-      );
-      setIds(updatedIds);
+      setClassrooms(data ? data.map((c) => ({ ...c, active: false })) : null);
+      setIds(data ? data.map((c) => c.id) : []);
     } catch (error) {
       console.log(error);
     }

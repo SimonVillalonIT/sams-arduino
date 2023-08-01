@@ -6,6 +6,7 @@ import { HiPlusCircle } from "react-icons/hi";
 
 export default function DashboardPage() {
   const { classrooms } = useClassrooms();
+
   return classrooms ? (
     <>
       {classrooms.length === 0 ? (
