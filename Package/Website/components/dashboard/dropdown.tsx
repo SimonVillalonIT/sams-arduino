@@ -7,8 +7,8 @@ const Dropdown = ({ onClick }: { onClick: () => void }) => (
       tabIndex={0}
       className="dropdown-content z-[1] menu p-2 shadow bg-base-100 rounded-box w-52"
     >
-      <li>
-        <a className="text-error" onClick={onClick}>
+      <li onClick={onClick}>
+        <a className="text-error">
           <HiTrash /> Borrar
         </a>
       </li>

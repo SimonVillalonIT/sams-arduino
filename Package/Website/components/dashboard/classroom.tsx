@@ -1,4 +1,5 @@
-import useClassrooms, { Classroom } from "hooks/useClassrooms";
+import useClassroomStore from "@/store/classroomStore";
+import { Classroom } from "hooks/useClassrooms";
 import { HiThumbDown } from "react-icons/hi";
 import Dropdown from "./dropdown";
 
@@ -22,7 +23,7 @@ const Classroom = ({
     sensor6 ? sensor6 : 0,
   ];
   const highest = Math.max(...levels);
-  const { deleteClassroom, setClassrooms, classrooms } = useClassrooms();
+  const { deleteClassroom } = useClassroomStore();
   return (
     <div
       className={`h-72 relative w-64 ${
@@ -42,9 +43,8 @@ const Classroom = ({
         </>
       )}
       <Dropdown
-        onClick={async () => {
-          //deleteClassroom(id);
-          setClassrooms(classrooms?.filter((c) => c.id !== id));
+        onClick={() => {
+          deleteClassroom(id);
         }}
       />
     </div>

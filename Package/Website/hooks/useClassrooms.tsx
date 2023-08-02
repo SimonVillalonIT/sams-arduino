@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 import { getUserId } from "@/utils/supabase";
+import useClassroomStore from "@/store/classroomStore";
 
 export interface Classroom {
   id: string;
@@ -12,12 +13,12 @@ export interface Classroom {
   sensor4: number | null;
   sensor5: number | null;
   sensor6: number | null;
-  active: boolean;
+  active?: boolean;
 }
 
 export default function useClassrooms() {
   const supabase = createClientComponentClient<Database>();
-  const [classrooms, setClassrooms] = useState<Classroom[] | null>([]);
+  const { classrooms, setClassrooms } = useClassroomStore();
   const [ids, setIds] = useState<string[] | []>([]);
 
   const suscribeToChanges = () => {
@@ -64,14 +65,6 @@ export default function useClassrooms() {
     }
   };
 
-  const deleteClassroom = async (id: string) => {
-    try {
-      await supabase.from("device").delete().eq("id", id);
-    } catch (e) {
-      console.log(e);
-    }
-  };
-
   useEffect(() => {
     fetchData();
   }, []);
@@ -81,10 +74,7 @@ export default function useClassrooms() {
   }, [ids]);
 
   return {
-    ids,
-    setIds,
     classrooms,
     setClassrooms,
-    deleteClassroom,
   };
 }
