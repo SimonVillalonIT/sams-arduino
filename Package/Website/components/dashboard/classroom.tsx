@@ -1,5 +1,6 @@
-import { Classroom } from "hooks/useClassrooms";
+import useClassrooms, { Classroom } from "hooks/useClassrooms";
 import { HiThumbDown } from "react-icons/hi";
+import Dropdown from "./dropdown";
 
 const Classroom = ({
   classroom,
@@ -10,6 +11,7 @@ const Classroom = ({
   sensor5,
   sensor6,
   active,
+  id,
 }: Classroom) => {
   const levels = [
     sensor1 ? sensor1 : 0,
@@ -20,8 +22,13 @@ const Classroom = ({
     sensor6 ? sensor6 : 0,
   ];
   const highest = Math.max(...levels);
+  const { deleteClassroom, setClassrooms, classrooms } = useClassrooms();
   return (
-    <div className="h-72 w-64 shadow-black/10 shadow-xl flex flex-col items-center justify-around">
+    <div
+      className={`h-72 relative w-64 ${
+        active ? "shadow-black/10 shadow-xl" : "shadow-black/5 shadow-lg"
+      } flex flex-col items-center justify-around`}
+    >
       {active ? (
         <>
           <p className="text-2xl">{highest}</p>
@@ -29,8 +36,17 @@ const Classroom = ({
           <h1 className="text-2xl">{classroom}</h1>
         </>
       ) : (
-        "Apagado"
+        <>
+          <h1>Apagado</h1>
+          <h1 className="text-2xl">{classroom}</h1>
+        </>
       )}
+      <Dropdown
+        onClick={async () => {
+          //deleteClassroom(id);
+          setClassrooms(classrooms?.filter((c) => c.id !== id));
+        }}
+      />
     </div>
   );
 };

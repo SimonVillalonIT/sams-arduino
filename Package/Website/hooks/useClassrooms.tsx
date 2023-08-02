@@ -35,7 +35,13 @@ export default function useClassrooms() {
         },
         (payload) => {
           const updatedDevice = payload.new as Classroom;
-          setClassrooms([{ ...updatedDevice, active: true }]);
+          const oldClassrooms = classrooms?.filter(
+            (c) => c.id !== updatedDevice.id,
+          );
+          setClassrooms([
+            ...(oldClassrooms as []),
+            { ...updatedDevice, active: true },
+          ]);
         },
       )
       .subscribe();
@@ -58,6 +64,14 @@ export default function useClassrooms() {
     }
   };
 
+  const deleteClassroom = async (id: string) => {
+    try {
+      await supabase.from("device").delete().eq("id", id);
+    } catch (e) {
+      console.log(e);
+    }
+  };
+
   useEffect(() => {
     fetchData();
   }, []);
@@ -71,5 +85,6 @@ export default function useClassrooms() {
     setIds,
     classrooms,
     setClassrooms,
+    deleteClassroom,
   };
 }
