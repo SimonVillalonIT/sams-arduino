@@ -6,6 +6,7 @@ import Dropdown from "./dropdown";
 import DropdownItem from "./dropdown-item";
 import { HiShare, HiTrash } from "react-icons/hi";
 import Modal from "./modal";
+import UsersSearch from "./users-search";
 
 const Classroom = ({
   classroom,
@@ -84,6 +85,7 @@ const Classroom = ({
             />
           </div>
         </div>
+        <UsersSearch text="simon" />
       </Modal>
     </div>
   );
