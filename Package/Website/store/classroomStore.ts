@@ -9,6 +9,7 @@ interface Store {
 interface Actions {
   setClassrooms: (c: Classroom[] | null | []) => void;
   deleteClassroom: (id: string) => void;
+  shareClassroom: (id: string) => void;
 }
 
 const useClassroomStore = create<Store & Actions>((set) => ({
@@ -22,6 +23,7 @@ const useClassroomStore = create<Store & Actions>((set) => ({
         : { ...state, classroom: null },
     );
   },
+  shareClassroom: async (id) => {},
 }));
 
 export default useClassroomStore;
