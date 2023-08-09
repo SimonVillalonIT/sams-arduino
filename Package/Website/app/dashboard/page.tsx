@@ -17,7 +17,7 @@ export default function DashboardPage() {
       ) : null}
       <section className="p-8 flex gap-4">
         {classrooms.map((classroom) => (
-          <Classroom {...classroom} />
+          <Classroom key={classroom.id} {...classroom} />
         ))}
         <div className="h-72 w-56 shadow-black/10 shadow-xl flex flex-col items-center justify-center">
           <Link href="/dashboard/devices/create">

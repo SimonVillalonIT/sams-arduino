@@ -1,4 +1,3 @@
-import useModal from "@/hooks/useModal";
 import React from "react";
 
 type Props = {
@@ -8,7 +7,6 @@ type Props = {
 };
 
 const Modal = ({ children, state, setState }: Props) => {
-  const { showModal, toggleModal } = useModal();
   return (
     <div
       className={`modal modal-bottom sm:modal-middle ${
