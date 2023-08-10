@@ -1,5 +1,6 @@
 import { PublicUser } from "@/hooks/useUsersSearch";
 import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
+import { findLastKey } from "lodash";
 import { HiPaperAirplane } from "react-icons/hi";
 
 export default function UsersSearch({
@@ -10,7 +11,9 @@ export default function UsersSearch({
   idClassroom: string;
 }) {
   const supabase = createClientComponentClient<Database>();
-  const sendInvitation = async (data: NotificationTable) => {
+  const sendInvitation = async (
+    data: Database["public"]["Tables"]["notification"]["Insert"],
+  ) => {
     try {
       const { error, status } = await supabase
         .from("notification")
@@ -32,7 +35,6 @@ export default function UsersSearch({
           <HiPaperAirplane
             onClick={() =>
               sendInvitation({
-                id: null,
                 "accepted?": false,
                 id_device: idClassroom,
                 id_user: user.id,
