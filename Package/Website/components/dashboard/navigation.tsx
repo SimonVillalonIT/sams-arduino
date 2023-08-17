@@ -7,7 +7,7 @@ import HeaderLink from "./header-link";
 import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 import { useEffect, useState } from "react";
 import { HiCheck, HiX } from "react-icons/hi";
-import { isDynamicMetadataRoute } from "next/dist/build/analysis/get-page-static-info";
+import { getUserId } from "@/utils/supabase";
 
 const Navigation = () => {
   const [notification, setNotification] = useState<
@@ -29,7 +29,10 @@ const Navigation = () => {
   const supabase = createClientComponentClient<Database>();
 
   const getNotifications = async () => {
-    const { data, error } = await supabase.from("notification").select("*");
+    const { data, error } = await supabase
+      .from("notification")
+      .select("*")
+      .filter("id_user", "eq", await getUserId());
     if (error) setNotification([]);
     if (data) setNotification(data);
     console.log(error);

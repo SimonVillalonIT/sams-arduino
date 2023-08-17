@@ -1,6 +1,5 @@
 import { PublicUser } from "@/hooks/useUsersSearch";
 import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
-import { findLastKey } from "lodash";
 import { HiPaperAirplane } from "react-icons/hi";
 
 export default function UsersSearch({
@@ -26,7 +25,7 @@ export default function UsersSearch({
 
   return (
     <ul className="px-2 ">
-      {results?.map((user: any) => (
+      {results?.map((user: Database["public"]["Tables"]["users"]["Row"]) => (
         <li
           className="flex items-center justify-between py-2 border-b border-neutral-focus"
           key={user.id}
