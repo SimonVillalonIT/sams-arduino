@@ -34,7 +34,7 @@ export default function UsersSearch({
           <HiPaperAirplane
             onClick={() =>
               sendInvitation({
-                "accepted?": false,
+                accepted: false,
                 id_device: idClassroom,
                 id_user: user.id,
               })
