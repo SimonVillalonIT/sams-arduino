@@ -1,17 +1,20 @@
 import useUserSearchStore from "@/store/usersSearchStore";
 import React, { PropsWithChildren } from "react";
 import { HiX } from "react-icons/hi";
+import UsersSearch from "./users-search";
 
 interface InputSearchInterface {
   value: string;
+  classroomId: string;
   handleInputChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
 }
 const InputSearch = ({
   value,
-  children,
   handleInputChange,
-}: PropsWithChildren<InputSearchInterface>) => {
-  const { invitedUsers, filterInvitedUser } = useUserSearchStore();
+  classroomId,
+}: InputSearchInterface) => {
+  const { invitedUsers, filterInvitedUser, sendInvitation } =
+    useUserSearchStore();
   return (
     <div className="relative max-w-md mx-auto flex flex-col items-center">
       <div className="flex justify-start w-full flex-wrap">
@@ -27,18 +30,24 @@ const InputSearch = ({
           ),
         )}
       </div>
-      <div className="relative flex text-primary-content mt-2 items-center w-full h-12 rounded-lg focus-within:shadow-lg overflow-hidden">
+      <div className="relative flex text-primary-content mt-2 items-center w-full h-12 rounded-lg border-neutral border-b focus-within:shadow-lg overflow-hidden">
         <input
-          className="peer h-full w-full bg-neutral/5 outline-none text-sm pl-2"
+          className="peer h-full w-full bg-neutral/5 text-base-content -content outline-none text-sm pl-2"
           type="text"
           value={value}
           onChange={handleInputChange}
           id="search"
           placeholder="Busca un usuario para añadir..."
+          autoComplete="off"
         />
       </div>
-      {children}
-      <button className="btn btn-primary">Confirmar</button>
+      <UsersSearch />
+      <button
+        onClick={() => sendInvitation(invitedUsers, classroomId)}
+        className="btn btn-secondary text-secondary-content"
+      >
+        Confirmar
+      </button>
     </div>
   );
 };

@@ -13,7 +13,7 @@ const Modal = ({ children, state, setState }: Props) => {
         state ? "modal-open" : ""
       }`}
     >
-      <div className="modal-box min-h-[60%]">
+      <div className="modal-box ">
         <a
           onClick={setState}
           className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2"

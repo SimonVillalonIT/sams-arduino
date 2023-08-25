@@ -67,9 +67,11 @@ const Classroom = ({
       </Dropdown>
       <Modal setState={toggleModal} state={showModal}>
         <p className="text-center mb-4">Comparte el aula</p>
-        <InputSearch value={name} handleInputChange={handleInputChange}>
-          <UsersSearch />
-        </InputSearch>
+        <InputSearch
+          classroomId={id}
+          value={name}
+          handleInputChange={handleInputChange}
+        />
       </Modal>
     </div>
   );

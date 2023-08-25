@@ -1,3 +1,4 @@
+import { insertNotification } from "@/utils/supabase";
 import { create } from "zustand";
 
 interface Store {
@@ -17,11 +18,13 @@ interface Actions {
   ) => void;
   setSearchedQuery: (search: string) => void;
   setIsSearching: (bool: boolean) => void;
-  setInvitedUsers: (user: Database["public"]["Tables"]["users"]["Row"]) => void;
+  addInvitedUsers: (user: Database["public"]["Tables"]["users"]["Row"]) => void;
   filterInvitedUser: (id: string) => void;
+  clearInvitedUsers: () => void;
+  sendInvitation: (users: UserTable[], classroom: string) => void;
 }
 
-const useUserSearchStore = create<Store & Actions>()((set) => ({
+const useUserSearchStore = create<Store & Actions>()((set, get) => ({
   searchedResults: null,
   results: null,
   searchedQuery: "",
@@ -33,7 +36,7 @@ const useUserSearchStore = create<Store & Actions>()((set) => ({
   setSearchedQuery: (search) =>
     set((state) => ({ ...state, searchedQuery: search })),
   setIsSearching: (bool) => set((state) => ({ ...state, isSearching: bool })),
-  setInvitedUsers: (user) =>
+  addInvitedUsers: (user) =>
     set((state) => ({
       invitedUsers: [...state.invitedUsers, user],
     })),
@@ -41,6 +44,14 @@ const useUserSearchStore = create<Store & Actions>()((set) => ({
     set((state) => ({
       invitedUsers: state.invitedUsers.filter((user) => user.id !== id),
     })),
+  clearInvitedUsers: () => set((state) => ({ ...state, invitedUsers: [] })),
+  sendInvitation: async (users, classroom) => {
+    const error = await insertNotification(users, classroom);
+    if (error) {
+      return console.log(error);
+    }
+    get().clearInvitedUsers();
+  },
 }));
 
 export default useUserSearchStore;

@@ -3,16 +3,7 @@ import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 import { getUserId } from "@/utils/supabase";
 import useClassroomStore from "@/store/classroomStore";
 
-export interface Classroom {
-  id: string;
-  created_at: string;
-  classroom: string;
-  sensor1: number | null;
-  sensor2: number | null;
-  sensor3: number | null;
-  sensor4: number | null;
-  sensor5: number | null;
-  sensor6: number | null;
+export interface Classroom extends ClassroomTable {
   active?: boolean;
 }
 
@@ -53,15 +44,20 @@ export default function useClassrooms() {
   };
 
   const fetchData = async () => {
-    try {
-      const userId = (await getUserId()) as string;
-      const { data } = await supabase.rpc("get_devices_by_user_id", {
-        id_user: userId,
-      });
-      setClassrooms(data ? data.map((c) => ({ ...c, active: false })) : null);
-      setIds(data ? data.map((c) => c.id) : []);
-    } catch (error) {
-      console.log(error);
+    const userId = (await getUserId()) as string;
+    const { data, error } = await supabase.rpc("get_devices_by_user_id", {
+      id_user: userId,
+    });
+    if (error) {
+      console.error(error);
+    } else {
+      // Cast data to the Device[] type
+      const devices: Classroom[] = data as unknown as Classroom[];
+      console.log(devices);
+      setClassrooms(
+        devices ? devices.map((c) => ({ ...c, active: false })) : null,
+      );
+      setIds(devices ? devices.map((c) => c.id) : []);
     }
   };
 
