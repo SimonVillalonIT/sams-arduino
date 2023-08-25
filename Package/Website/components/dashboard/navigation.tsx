@@ -7,12 +7,13 @@ import HeaderLink from "./header-link";
 import NotificationButton from "./notification-button";
 
 const Navigation = () => {
-  type path = "config" | "devices" | "dashboard" | "create";
+  type path = "config" | "devices" | "dashboard" | "create" | "login";
   const paths = {
     config: "Configuración",
     devices: "Dispositivos",
     dashboard: "Inicio",
     create: "Crear",
+    login: "Inicio",
   };
   const path = usePathname().split("/").pop() as path;
 

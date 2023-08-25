@@ -1,15 +1,8 @@
 "use client";
-import useThemeStore from "store/themeStore";
-import { useEffect } from "react";
+import { useTheme } from "next-themes";
 
 function ToggleTheme({ className }: { className?: string }) {
-  const { theme, setTheme } = useThemeStore();
-
-  useEffect(() => {
-    const body = document.body;
-    body.setAttribute("data-theme", theme);
-  }, [theme]);
-
+  const { theme, setTheme } = useTheme();
   const toggleTheme = () => {
     theme === "emerald" ? setTheme("night") : setTheme("emerald");
   };

@@ -1,6 +1,7 @@
 import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
-import { useEffect, useState, useCallback } from "react";
+import { useEffect, useCallback } from "react";
 import debounce from "just-debounce-it";
+import useUserSearchStore from "@/store/usersSearchStore";
 
 export interface PublicUser {
   id: string;
@@ -9,12 +10,18 @@ export interface PublicUser {
 
 export default function useUsersSearch(query: string) {
   const supabase = createClientComponentClient<Database>();
-  const [searchedResults, setSearchedResults] = useState<PublicUser[] | null>(
-    null,
-  );
-  const [results, setResults] = useState<PublicUser[] | null>(null);
-  const [searchedQuery, setSearchedQuery] = useState("");
-  const [isSearching, setIsSearching] = useState(false);
+  const {
+    invitedUsers,
+    isSearching,
+    results,
+    searchedQuery,
+    searchedResults,
+    setInvitedUsers,
+    setIsSearching,
+    setResults,
+    setSearchedQuery,
+    setSearchedResults,
+  } = useUserSearchStore();
 
   const fetchUsers = async (text: string) => {
     const user = await supabase.auth.getUser();
@@ -31,7 +38,6 @@ export default function useUsersSearch(query: string) {
     debounce((q: string) => {
       setSearchedQuery(q);
       setIsSearching(true);
-
       fetchUsers(q).then((data) => {
         if (data) setSearchedResults(data);
         else console.log("¡Hubo un error al buscar personas!");
@@ -60,5 +66,5 @@ export default function useUsersSearch(query: string) {
     if (query) setResults(searchedResults);
   }, [searchedResults]);
 
-  return { results, getResults };
+  return { results, getResults, isSearching, invitedUsers, setInvitedUsers };
 }

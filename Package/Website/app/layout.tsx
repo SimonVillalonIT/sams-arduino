@@ -1,4 +1,6 @@
+"use client";
 import "styles/globals.css";
+import { ThemeProvider } from "next-themes";
 
 export const metadata = {
   title: "Sams",
@@ -11,8 +13,12 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" className="scroll-smooth">
-      <body>{children}</body>
+    <html lang="en" className="scroll-smooth" suppressHydrationWarning>
+      <body>
+        <ThemeProvider defaultTheme="emerald" themes={["emerald", "night"]}>
+          {children}
+        </ThemeProvider>
+      </body>
     </html>
   );
 }

@@ -1,15 +1,9 @@
-import { PublicUser } from "@/hooks/useUsersSearch";
+import useUserSearchStore from "@/store/usersSearchStore";
 import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
-import { HiPaperAirplane } from "react-icons/hi";
 
-export default function UsersSearch({
-  results,
-  idClassroom,
-}: {
-  results: PublicUser[] | null;
-  idClassroom: string;
-}) {
+export default function UsersSearch() {
   const supabase = createClientComponentClient<Database>();
+  const { results, setInvitedUsers, invitedUsers } = useUserSearchStore();
   const sendInvitation = async (
     data: Database["public"]["Tables"]["notification"]["Insert"],
   ) => {
@@ -24,23 +18,18 @@ export default function UsersSearch({
   };
 
   return (
-    <ul className="px-2 ">
+    <ul className="menu w-full rounded-box">
       {results?.map((user: Database["public"]["Tables"]["users"]["Row"]) => (
         <li
-          className="flex items-center justify-between py-2 border-b border-neutral-focus"
+          onClick={() =>
+            invitedUsers.find((u) => u.id === user.id)
+              ? null
+              : setInvitedUsers(user)
+          }
+          className="w-full "
           key={user.id}
         >
-          <p>{user.email}</p>
-          <HiPaperAirplane
-            onClick={() =>
-              sendInvitation({
-                accepted: false,
-                id_device: idClassroom,
-                id_user: user.id,
-              })
-            }
-            className="rotate-90 text-accent text-xl"
-          />
+          <a>{user.email}</a>
         </li>
       ))}
     </ul>

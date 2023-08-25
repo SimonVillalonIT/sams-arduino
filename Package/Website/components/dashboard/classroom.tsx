@@ -1,5 +1,5 @@
 import useModal from "@/hooks/useModal";
-import useclassNameroomStore from "@/store/classroomStore";
+import useclassroomStore from "@/store/classroomStore";
 import { Classroom } from "hooks/useClassrooms";
 import { HiThumbDown } from "react-icons/hi";
 import Dropdown from "./dropdown";
@@ -8,8 +8,8 @@ import { HiShare, HiTrash } from "react-icons/hi";
 import Modal from "./modal";
 import UsersSearch from "./users-search";
 import React, { useState } from "react";
-import useUsersSearch from "@/hooks/useUsersSearch";
 import InputSearch from "./input-search";
+import useUsersSearch from "@/hooks/useUsersSearch";
 
 const Classroom = ({
   classroom,
@@ -32,12 +32,12 @@ const Classroom = ({
   ];
   const highest = Math.max(...levels);
   const [name, setName] = useState<string>("");
-  const { deleteClassroom } = useclassNameroomStore();
+  const { deleteClassroom } = useclassroomStore();
   const { toggleModal, showModal } = useModal();
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setName(e.target.value);
   };
-  const { results } = useUsersSearch(name);
+  useUsersSearch(name);
   return (
     <div
       className={`h-72 relative w-64 ${
@@ -68,7 +68,7 @@ const Classroom = ({
       <Modal setState={toggleModal} state={showModal}>
         <p className="text-center mb-4">Comparte el aula</p>
         <InputSearch value={name} handleInputChange={handleInputChange}>
-          <UsersSearch idClassroom={id} results={results} />
+          <UsersSearch />
         </InputSearch>
       </Modal>
     </div>

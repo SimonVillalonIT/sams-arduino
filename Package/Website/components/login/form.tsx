@@ -29,7 +29,7 @@ export default function AuthForm<T extends FormikValues>({
       }}
     >
       {({ errors, isValid, isSubmitting, isValidating }) => (
-        <Form>
+        <Form autoComplete="off">
           {inputs.map((input, i: number) => {
             const error = errors[input.name] as string | undefined;
             return <Input {...input} key={i} error={error} />;
