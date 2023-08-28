@@ -1,3 +1,4 @@
+import useUserSearchStore from "@/store/usersSearchStore";
 import React from "react";
 
 type Props = {
@@ -7,15 +8,20 @@ type Props = {
 };
 
 const Modal = ({ children, state, setState }: Props) => {
+  const { setResults } = useUserSearchStore();
   return (
     <div
+      onClick={(e) => e.stopPropagation()}
       className={`modal modal-bottom sm:modal-middle ${
         state ? "modal-open" : ""
       }`}
     >
       <div className="modal-box ">
         <a
-          onClick={setState}
+          onClick={() => {
+            setState();
+            setResults([]);
+          }}
           className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2"
         >
           ✕

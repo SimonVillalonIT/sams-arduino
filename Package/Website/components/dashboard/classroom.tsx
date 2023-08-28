@@ -6,7 +6,6 @@ import Dropdown from "./dropdown";
 import DropdownItem from "./dropdown-item";
 import { HiShare, HiTrash } from "react-icons/hi";
 import Modal from "./modal";
-import UsersSearch from "./users-search";
 import React, { useState } from "react";
 import InputSearch from "./input-search";
 import useUsersSearch from "@/hooks/useUsersSearch";
@@ -37,7 +36,7 @@ const Classroom = ({
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setName(e.target.value);
   };
-  useUsersSearch(name);
+  useUsersSearch(name, id);
   return (
     <div
       className={`h-72 relative w-64 ${

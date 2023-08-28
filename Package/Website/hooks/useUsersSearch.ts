@@ -8,7 +8,7 @@ export interface PublicUser {
   email: string | null;
 }
 
-export default function useUsersSearch(query: string) {
+export default function useUsersSearch(query: string, classroomId: string) {
   const {
     invitedUsers,
     isSearching,
@@ -26,7 +26,7 @@ export default function useUsersSearch(query: string) {
     debounce((q: string) => {
       setSearchedQuery(q);
       setIsSearching(true);
-      fetchUsers(q).then((data) => {
+      fetchUsers(q, classroomId).then((data) => {
         if (data) setSearchedResults(data);
         else console.log("¡Hubo un error al buscar personas!");
         setIsSearching(false);

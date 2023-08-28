@@ -1,5 +1,5 @@
 import useUserSearchStore from "@/store/usersSearchStore";
-import React, { PropsWithChildren } from "react";
+import React from "react";
 import { HiX } from "react-icons/hi";
 import UsersSearch from "./users-search";
 
@@ -20,10 +20,13 @@ const InputSearch = ({
       <div className="flex justify-start w-full flex-wrap">
         {invitedUsers?.map(
           (invitedUser: Database["public"]["Tables"]["users"]["Row"]) => (
-            <div className="flex ml-1 mb-1 items-center self-start text-sm rounded-xl bg-secondary text-secondary-content p-1">
-              {invitedUser.email?.split("@")[0]}{" "}
+            <div
+              key={invitedUser.id}
+              className="flex ml-1 mb-1 items-center self-start text-sm rounded-xl bg-secondary text-secondary-content p-1"
+            >
+              {invitedUser.email?.split("@")[0]}&nbsp;
               <HiX
-                className="text-md"
+                className="text-md hover:cursor-pointer"
                 onClick={() => filterInvitedUser(invitedUser.id)}
               />
             </div>

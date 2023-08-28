@@ -2,11 +2,11 @@ import { insertNotification } from "@/utils/supabase";
 import { create } from "zustand";
 
 interface Store {
-  searchedResults: Database["public"]["Tables"]["users"]["Row"][] | null;
-  results: Database["public"]["Tables"]["users"]["Row"][] | null;
+  searchedResults: UserTable[] | null;
+  results: UserTable[] | null;
   searchedQuery: string;
   isSearching: boolean;
-  invitedUsers: Database["public"]["Tables"]["users"]["Row"][] | [];
+  invitedUsers: UserTable[];
 }
 
 interface Actions {

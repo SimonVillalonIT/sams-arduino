@@ -17,14 +17,11 @@ export const deleteClassroom = async (id: string) => {
   }
 };
 
-export const fetchUsers = async (text: string) => {
-  const user = await supabase.auth.getUser();
-  const { data } = await supabase!
-    .from("users")
-    .select("*")
-    .neq("email", user.data.user?.email)
-    .ilike("email", `${text}%`)
-    .limit(4);
+export const fetchUsers = async (text: string, classroomId: string) => {
+  const { data } = await supabase.rpc("fetch_users", {
+    text_value: text,
+    classroom_id: classroomId,
+  });
   return data;
 };
 

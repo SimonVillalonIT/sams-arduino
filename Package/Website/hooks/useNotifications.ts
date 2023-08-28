@@ -1,9 +1,11 @@
 import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 import { useState, useEffect } from "react";
 import { getUserId } from "@/utils/supabase";
+import useAlertStore from "@/store/alertStore";
 
 export default function useNotifications() {
   const supabase = createClientComponentClient<Database>();
+  const { setAlert } = useAlertStore();
 
   const [notifications, setNotifications] = useState<
     Database["public"]["Tables"]["notification"]["Row"][] | []
@@ -15,9 +17,11 @@ export default function useNotifications() {
       .select("*")
       .eq("accepted", false)
       .filter("id_user", "eq", await getUserId());
-    if (error) setNotifications([]);
+    if (error) {
+      setNotifications([]);
+      console.log(error);
+    }
     if (data) setNotifications(data);
-    console.log(error);
   };
 
   const accept = async (
@@ -28,7 +32,7 @@ export default function useNotifications() {
       user_id: data.user_id as string,
       notification_id: data.notification_id,
     });
-    console.log(error);
+    if (error) console.log(error);
     setNotifications(
       notifications.filter((n) => n.id_device !== data.device_id),
     );

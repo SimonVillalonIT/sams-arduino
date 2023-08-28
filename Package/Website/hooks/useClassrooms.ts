@@ -53,7 +53,6 @@ export default function useClassrooms() {
     } else {
       // Cast data to the Device[] type
       const devices: Classroom[] = data as unknown as Classroom[];
-      console.log(devices);
       setClassrooms(
         devices ? devices.map((c) => ({ ...c, active: false })) : null,
       );

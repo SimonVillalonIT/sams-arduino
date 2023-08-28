@@ -1,5 +1,4 @@
 import { deleteClassroom } from "@/utils/supabase";
-import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 import { Classroom } from "hooks/useClassrooms";
 import { create } from "zustand";
 
@@ -11,8 +10,6 @@ interface Actions {
   setClassrooms: (c: Classroom[] | null) => void;
   deleteClassroom: (id: string) => void;
 }
-
-const supabase = createClientComponentClient<Database>();
 
 const useClassroomStore = create<Store & Actions>((set) => ({
   classrooms: [],
