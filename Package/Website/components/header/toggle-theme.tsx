@@ -2,7 +2,12 @@
 import { useTheme } from "next-themes";
 
 function ToggleTheme({ className }: { className?: string }) {
+<<<<<<< HEAD
   const { theme, setTheme } = useTheme();
+=======
+  const { theme, setTheme } = useTheme()
+
+>>>>>>> ad5736d93822d1589808b85cd8bb93f77cc28cba
   const toggleTheme = () => {
     theme === "emerald" ? setTheme("night") : setTheme("emerald");
   };
