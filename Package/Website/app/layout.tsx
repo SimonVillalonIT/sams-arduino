@@ -2,11 +2,6 @@
 import "styles/globals.css";
 import { ThemeProvider } from "next-themes";
 
-export const metadata = {
-  title: "Sams",
-  description: "Sams - Sitio Web Oficial",
-};
-
 export default function RootLayout({
   children,
 }: {
