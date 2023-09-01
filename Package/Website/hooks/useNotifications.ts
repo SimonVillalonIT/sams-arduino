@@ -30,7 +30,6 @@ export default function useNotifications() {
     const { error } = await supabase.rpc("accept_notification", {
       device_id: data.device_id as string,
       user_id: data.user_id as string,
-      notification_id: data.notification_id,
     });
     if (error) console.log(error);
     setNotifications(
