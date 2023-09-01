@@ -1,18 +1,38 @@
-import { createClient } from '@supabase/supabase-js'
-import axios from 'axios'
+import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_PROJECT_URL!
-const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_APIKEY!
+const supabase = createClientComponentClient<Database>();
 
-export const supabase = createClient(supabaseUrl, supabaseKey, {
-  auth: { persistSession: true },
-})
+export const getUserId = async () => {
+  const user = await supabase.auth.getUser();
+  const id = user.data.user?.id as string;
+  return id;
+};
 
-export const supabaseFetch = axios.create({
-  baseURL: `${process.env.NEXT_PUBLIC_SUPABASE_PROJECT_URL}`,
-  timeout: 5000,
-  headers: {
-    Authorization: `Bearer ${process.env.NEXT_PUBLIC_SUPABASE_APIKEY}`,
-    apiKey: `${process.env.NEXT_PUBLIC_SUPABASE_APIKEY}`,
-  },
-})
+export const deleteClassroom = async (id: string) => {
+  try {
+    const { error } = await supabase.from("device").delete().eq("id", id);
+    console.log(error);
+  } catch (e) {
+    console.log(e);
+  }
+};
+
+export const fetchUsers = async (text: string, classroomId: string) => {
+  const { data } = await supabase.rpc("fetch_users", {
+    text_value: text,
+    classroom_id: classroomId,
+  });
+  return data;
+};
+
+export const insertNotification = async (
+  users: UserTable[],
+  classroom: string,
+) => {
+  for (let user of users) {
+    const { error } = await supabase
+      .from("notification")
+      .insert({ id_user: user.id, id_device: classroom });
+    return error;
+  }
+};
