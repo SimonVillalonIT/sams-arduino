@@ -1,11 +1,13 @@
 "use client";
 import useNotifications from "@/hooks/useNotifications";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { HiCheck, HiX } from "react-icons/hi";
 
 const NotificationButton = () => {
   const [toggle, setToggle] = useState(false);
   const { notifications, accept, deny } = useNotifications();
+  const router = useRouter();
   return (
     <div>
       <button
@@ -38,13 +40,13 @@ const NotificationButton = () => {
               <div key={n.id} className="alert alert-info">
                 <span>{n.id_device}</span>
                 <HiCheck
-                  onClick={() =>
+                  onClick={() => {
                     accept({
                       device_id: n.id_device,
                       user_id: n.id_user as string,
-                      notification_id: n.id,
-                    })
-                  }
+                    });
+                    router.refresh();
+                  }}
                 />
                 <HiX onClick={() => deny(n)} />
               </div>

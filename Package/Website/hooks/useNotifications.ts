@@ -25,16 +25,19 @@ export default function useNotifications() {
   };
 
   const accept = async (
-    data: Database["public"]["Functions"]["accept_notification"]["Args"],
+    notification: Database["public"]["Functions"]["accept_notification"]["Args"],
   ) => {
-    const { error } = await supabase.rpc("accept_notification", {
-      device_id: data.device_id as string,
-      user_id: data.user_id as string,
+    const { data, error } = await supabase.rpc("accept_notification", {
+      device_id: notification.device_id as string,
+      user_id: notification.user_id as string,
     });
     if (error) console.log(error);
-    setNotifications(
-      notifications.filter((n) => n.id_device !== data.device_id),
-    );
+    if (data) {
+      console.log(data);
+      setNotifications(
+        notifications.filter((n) => n.id_device !== notification.device_id),
+      );
+    }
   };
 
   const deny = async (
