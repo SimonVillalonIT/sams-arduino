@@ -38,8 +38,9 @@ const NotificationButton = () => {
         {toggle
           ? notifications.map((n) => (
               <div key={n.id} className="alert alert-info">
-                <span>{n.id_device}</span>
+                {n.email.split("@")[0]} te ha invitado a unirte a {n.classroom}!
                 <HiCheck
+                  className="cursor-pointer"
                   onClick={() => {
                     accept({
                       device_id: n.id_device,
@@ -48,7 +49,7 @@ const NotificationButton = () => {
                     router.refresh();
                   }}
                 />
-                <HiX onClick={() => deny(n)} />
+                <HiX className="cursor-pointer" onClick={() => deny(n)} />
               </div>
             ))
           : null}

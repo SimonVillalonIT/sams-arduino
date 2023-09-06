@@ -11,6 +11,7 @@ export default function useClassrooms() {
   const supabase = createClientComponentClient<Database>();
   const { classrooms, setClassrooms } = useClassroomStore();
   const [ids, setIds] = useState<string[] | []>([]);
+  const [loading, setLoading] = useState(true);
 
   const suscribeToChanges = () => {
     if (ids?.length === 0) return;
@@ -50,13 +51,14 @@ export default function useClassrooms() {
     });
     if (error) {
       console.error(error);
+      setLoading(false);
     } else {
-      // Cast data to the Device[] type
       const devices: Classroom[] = data as unknown as Classroom[];
       setClassrooms(
         devices ? devices.map((c) => ({ ...c, active: false })) : null,
       );
       setIds(devices ? devices.map((c) => c.id) : []);
+      setLoading(false);
     }
   };
 
@@ -71,5 +73,6 @@ export default function useClassrooms() {
   return {
     classrooms,
     setClassrooms,
+    loading,
   };
 }

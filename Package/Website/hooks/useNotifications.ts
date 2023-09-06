@@ -1,22 +1,15 @@
 import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 import { useState, useEffect } from "react";
-import { getUserId } from "@/utils/supabase";
-import useAlertStore from "@/store/alertStore";
 
 export default function useNotifications() {
   const supabase = createClientComponentClient<Database>();
-  const { setAlert } = useAlertStore();
 
   const [notifications, setNotifications] = useState<
-    Database["public"]["Tables"]["notification"]["Row"][] | []
+    Database["public"]["Functions"]["fetch_notifications"]["Returns"]
   >([]);
 
   const getNotifications = async () => {
-    const { data, error } = await supabase
-      .from("notification")
-      .select("*")
-      .eq("accepted", false)
-      .filter("id_user", "eq", await getUserId());
+    const { data, error } = await supabase.rpc("fetch_notifications");
     if (error) {
       setNotifications([]);
       console.log(error);
@@ -33,16 +26,13 @@ export default function useNotifications() {
     });
     if (error) console.log(error);
     if (data) {
-      console.log(data);
       setNotifications(
         notifications.filter((n) => n.id_device !== notification.device_id),
       );
     }
   };
 
-  const deny = async (
-    data: Database["public"]["Tables"]["notification"]["Row"],
-  ) => {
+  const deny = async (data: { id_device: string; id: string }) => {
     const { error } = await supabase
       .from("notification")
       .delete()
