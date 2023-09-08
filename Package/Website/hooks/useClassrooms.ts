@@ -9,11 +9,11 @@ export interface Classroom extends ClassroomTable {
 
 export default function useClassrooms() {
   const supabase = createClientComponentClient<Database>();
-  const { classrooms, setClassrooms } = useClassroomStore();
+  //const { classrooms, setClassrooms } = useClassroomStore();
   const [ids, setIds] = useState<string[] | []>([]);
   const [loading, setLoading] = useState(true);
 
-  const suscribeToChanges = () => {
+  /*const suscribeToChanges = () => {
     if (ids?.length === 0) return;
     const filter = `id=in.(${ids?.join(",")})`;
     const channel = supabase
@@ -43,7 +43,6 @@ export default function useClassrooms() {
       channel.unsubscribe();
     };
   };
-
   const fetchData = async () => {
     const userId = (await getUserId()) as string;
     const { data, error } = await supabase.rpc("get_devices_by_user_id", {
@@ -69,10 +68,46 @@ export default function useClassrooms() {
   useEffect(() => {
     suscribeToChanges();
   }, [ids]);
+*/
 
+  const classrooms: ClassroomTable[] = [
+    {
+      classroom: "Matematica",
+      id: "2",
+      created_at: "2004-03-26",
+      sensor1: 45,
+      sensor2: 89,
+      sensor3: 90,
+      sensor4: 91,
+      sensor5: 92,
+      sensor6: 93,
+    },
+    {
+      classroom: "Lengua",
+      id: "3",
+      created_at: "2004-03-22",
+      sensor1: 45,
+      sensor2: 45,
+      sensor3: 45,
+      sensor4: 45,
+      sensor5: 45,
+      sensor6: 45,
+    },
+    {
+      classroom: "Programación",
+      id: "4",
+      created_at: "2004-03-23",
+      sensor1: 3,
+      sensor2: 3,
+      sensor3: 3,
+      sensor4: 3,
+      sensor5: 3,
+      sensor6: 3,
+    },
+  ];
   return {
     classrooms,
-    setClassrooms,
+    //setClassrooms,
     loading,
   };
 }

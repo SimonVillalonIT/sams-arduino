@@ -16,14 +16,26 @@ export default function DashboardPage() {
   useEffect(() => {
     const fetchHistoric = async () => {
       const { data, error } = await supabase.from("history").select();
-      console.log(data);
-      data ? setData(data) : null;
+      const formattedData =
+        [] as Database["public"]["Tables"]["history"]["Row"][];
+      data?.map((d) =>
+        d.updated_at
+          ? formattedData.push({
+              ...d,
+              updated_at: new Intl.DateTimeFormat("es-AR", {
+                dateStyle: "medium",
+                timeStyle: "medium",
+              }).format(new Date(d.updated_at)),
+            })
+          : null,
+      );
+      data ? setData(formattedData) : null;
     };
     fetchHistoric();
   }, []);
 
   const dataFormatter = (number: number) => {
-    return "$ " + Intl.NumberFormat("us").format(number).toString();
+    return Intl.NumberFormat("us").format(number).toString() + "db";
   };
 
   return !loading ? (
@@ -58,7 +70,7 @@ export default function DashboardPage() {
               "sensor5",
               "sensor6",
             ]}
-            colors={["indigo", "cyan"]}
+            colors={["rose", "pink", "indigo", "sky", "emerald", "amber"]}
             valueFormatter={dataFormatter}
           />
         ) : null}

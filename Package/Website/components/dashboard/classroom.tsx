@@ -1,7 +1,7 @@
 import useModal from "@/hooks/useModal";
 import useclassroomStore from "@/store/classroomStore";
 import { Classroom } from "hooks/useClassrooms";
-import { HiThumbDown } from "react-icons/hi";
+import { BiHappyAlt, BiConfused, BiDizzy } from "react-icons/bi";
 import Dropdown from "./dropdown";
 import DropdownItem from "./dropdown-item";
 import { HiShare, HiTrash } from "react-icons/hi";
@@ -40,21 +40,33 @@ const Classroom = ({
   return (
     <div
       className={`h-72 relative w-64 ${
-        active ? "shadow-black/10 shadow-xl" : "shadow-black/5 shadow-lg"
-      } flex flex-col items-center justify-around`}
+        1 == 1
+          ? "shadow-black/10 shadow-xl bg-neutral/5"
+          : "shadow-black/5 shadow-lg"
+      } flex flex-col items-center justify-around `}
     >
-      {active ? (
+      {
+        //active ? (
         <>
           <p className="text-2xl">{highest}</p>
-          <HiThumbDown className="text-3xl text-red-800" />
+          {highest > 90 ? (
+            <BiDizzy className="text-6xl text-red-800" />
+          ) : highest < 90 && highest > 40 ? (
+            <BiConfused className="text-6xl text-yellow-800" />
+          ) : (
+            <BiHappyAlt className="text-6xl text-green-800" />
+          )}
           <h1 className="text-2xl">{classroom}</h1>
         </>
-      ) : (
+        /*) 
+      : (
         <>
           <h1>Apagado</h1>
           <h1 className="text-2xl">{classroom}</h1>
         </>
-      )}
+      )
+      */
+      }
       <Dropdown>
         <DropdownItem
           className="text-error"
