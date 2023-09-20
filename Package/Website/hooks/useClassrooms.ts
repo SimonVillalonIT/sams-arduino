@@ -105,6 +105,9 @@ export default function useClassrooms() {
       sensor6: 3,
     },
   ];
+  useEffect(() => {
+    setLoading(false);
+  });
   return {
     classrooms,
     //setClassrooms,
