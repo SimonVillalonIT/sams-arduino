@@ -6,14 +6,14 @@ const data = {
   header: {
     links: [
       {
-        title: "Dashboard to manage your devices ",
+        title: "Inicio de la pagina principal",
         href: "/",
-        text: "Home",
+        text: "Inicio",
       },
       {
-        title: "Home of website",
+        title: "Características del producto",
         href: "/#features",
-        text: "Features",
+        text: "Características",
       },
       {
         title: "Contact with us",

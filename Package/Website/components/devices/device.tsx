@@ -1,118 +1,30 @@
-import type { Identifier, XYCoord } from "dnd-core";
-import { useRef } from "react";
-import { useDrag, useDrop } from "react-dnd";
+"use client";
+import { Classroom } from "@/hooks/useClassrooms";
+import Link from "next/link";
+import React from "react";
+import { DndProvider } from "react-dnd";
+import { HTML5Backend } from "react-dnd-html5-backend";
+import Sensors from "./sensors";
 
-const ItemTypes = {
-  CARD: "card",
-};
-
-export interface CardProps {
-  id: any;
-  value: number;
-  index: number;
-  moveCard: (dragIndex: number, hoverIndex: number) => void;
-}
-
-interface DragItem {
-  index: number;
-  id: string;
-  type: string;
-}
-
-const Card = ({ id, value, index, moveCard }: CardProps) => {
-  const ref = useRef<HTMLDivElement>(null);
-  const [{ handlerId }, drop] = useDrop<
-    DragItem,
-    void,
-    { handlerId: Identifier | null }
-  >({
-    accept: ItemTypes.CARD,
-    collect(monitor) {
-      return {
-        handlerId: monitor.getHandlerId(),
-      };
-    },
-    hover(item: DragItem, monitor) {
-      if (!ref.current) {
-        return;
-      }
-      const dragIndex = item.index;
-      const hoverIndex = index;
-
-      // Don't replace items with themselves
-      if (dragIndex === hoverIndex) {
-        return;
-      }
-
-      // Determine rectangle on screen
-      const hoverBoundingRect = ref.current?.getBoundingClientRect();
-
-      // Get vertical middle
-      const hoverMiddleY =
-        (hoverBoundingRect.bottom - hoverBoundingRect.top) / 2;
-
-      // Determine mouse position
-      const clientOffset = monitor.getClientOffset();
-
-      // Get pixels to the top
-      const hoverClientY = (clientOffset as XYCoord).y - hoverBoundingRect.top;
-
-      // Only perform the move when the mouse has crossed half of the items height
-      // When dragging downwards, only move when the cursor is below 50%
-      // When dragging upwards, only move when the cursor is above 50%
-
-      // Dragging downwards
-      if (dragIndex < hoverIndex && hoverClientY < hoverMiddleY) {
-        return;
-      }
-
-      // Dragging upwards
-      if (dragIndex > hoverIndex && hoverClientY > hoverMiddleY) {
-        return;
-      }
-
-      // Time to actually perform the action
-      moveCard(dragIndex, hoverIndex);
-
-      // Note: we're mutating the monitor item here!
-      // Generally it's better to avoid mutations,
-      // but it's good here for the sake of performance
-      // to avoid expensive index searches.
-      item.index = hoverIndex;
-    },
-  });
-
-  const [{ isDragging }, drag] = useDrag({
-    type: ItemTypes.CARD,
-    item: () => {
-      return { id, index };
-    },
-    collect: (monitor: any) => ({
-      isDragging: monitor.isDragging(),
-    }),
-  });
-
-  const opacity = isDragging ? 0 : 1;
-  drag(drop(ref));
+const device = ({ data }: { data: Classroom }) => {
   return (
-    <>
-      <div
-        ref={ref}
-        className={`flex justify-center items-center ${
-          opacity === 1 ? "opacity-100" : "opacity-0"
-        } w-full ${
-          value <= 45
-            ? "bg-success"
-            : value > 45 && value <= 90
-            ? "bg-warning"
-            : "bg-error"
-        } border border-base-200 text-primary-content select-none`}
-        data-handler-id={handlerId}
-      >
-        {value}
+    <DndProvider backend={HTML5Backend}>
+      <div className="flex flex-col items-center">
+        <Sensors
+          data={[
+            { id: 1, value: data.sensor1 ?? 0 },
+            { id: 2, value: data.sensor2 ?? 0 },
+            { id: 3, value: data.sensor3 ?? 0 },
+            { id: 4, value: data.sensor4 ?? 0 },
+            { id: 5, value: data.sensor5 ?? 0 },
+            { id: 6, value: data.sensor6 ?? 0 },
+          ]}
+        />
+        <strong className="text-base-content mt-2">{data.classroom}</strong>
+        <Link href={`/dashboard/devices/${data.id}`}>Detalles</Link>
       </div>
-    </>
+    </DndProvider>
   );
 };
 
-export default Card;
+export default device;

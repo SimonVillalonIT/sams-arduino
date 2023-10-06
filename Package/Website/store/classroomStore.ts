@@ -3,11 +3,11 @@ import { Classroom } from "hooks/useClassrooms";
 import { create } from "zustand";
 
 interface Store {
-  classrooms: Classroom[] | null;
+  classrooms: Classroom[];
 }
 
 interface Actions {
-  setClassrooms: (c: Classroom[] | null) => void;
+  setClassrooms: (c: Classroom[]) => void;
   deleteClassroom: (id: string) => void;
 }
 

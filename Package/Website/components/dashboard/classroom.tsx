@@ -39,14 +39,13 @@ const Classroom = ({
   useUsersSearch(name, id);
   return (
     <div
-      className={`h-72 relative w-64 ${
+      className={`h-72 relative w-64 border border-transparent hover:border-secondary ${
         1 == 1
           ? "shadow-black/10 shadow-xl bg-neutral/5"
           : "shadow-black/5 shadow-lg"
-      } flex flex-col items-center justify-around `}
+      } flex flex-col items-center justify-around`}
     >
-      {
-        //active ? (
+      {active ? (
         <>
           <p className="text-2xl">{highest}</p>
           {highest > 90 ? (
@@ -58,15 +57,12 @@ const Classroom = ({
           )}
           <h1 className="text-2xl">{classroom}</h1>
         </>
-        /*) 
-      : (
+      ) : (
         <>
           <h1>Apagado</h1>
           <h1 className="text-2xl">{classroom}</h1>
         </>
-      )
-      */
-      }
+      )}
       <Dropdown>
         <DropdownItem
           className="text-error"

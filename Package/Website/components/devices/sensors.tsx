@@ -1,6 +1,7 @@
+"use client";
 import update from "immutability-helper";
 import { useCallback, useState } from "react";
-import Device from "./device";
+import Sensor from "./sensor";
 
 export interface Item {
   id: number;
@@ -24,7 +25,7 @@ export const Container = ({ data }: { data: Item[] }) => {
     const renderCard = useCallback(
       (card: { id: number; value: number }, index: number) => {
         return (
-          <Device
+          <Sensor
             key={card.id}
             index={index}
             id={card.id}
@@ -37,7 +38,7 @@ export const Container = ({ data }: { data: Item[] }) => {
     );
 
     return (
-      <div className="grid grid-cols-2 shadow-md shadow-base-300/70 p h-96 w-1/3 mx-4">
+      <div className="grid grid-cols-2 shadow-md shadow-base-300/70 p h-96 w-72 mx-4">
         {cards.map((card, i) => renderCard(card, i))}
       </div>
     );

@@ -7,7 +7,6 @@ import HeaderLink from "./header-link";
 import NotificationButton from "./notification-button";
 
 const Navigation = () => {
-  type path = "config" | "devices" | "dashboard" | "create" | "login";
   const paths = {
     config: "Configuración",
     devices: "Dispositivos",
@@ -15,17 +14,21 @@ const Navigation = () => {
     create: "Crear",
     login: "Inicio",
   };
-  const path = usePathname().split("/").pop() as path;
+  let pathName = usePathname().split("/");
+  while (!Object.hasOwn(paths, pathName[pathName.length - 1])) {
+    pathName.pop();
+  }
 
+  const path = pathName[pathName.length - 1] as keyof typeof paths;
   const { header } = data;
 
   return (
     <HeaderContainer>
       <ul className="menu menu-horizontal">
         <li>
-          <details>
-            <summary className="min-w-[135px]">{paths[path]}</summary>
-            <ul className="p-2 bg-base-100">
+          <details className="">
+            <summary className="min-w-[135px]  z-[100]">{paths[path]}</summary>
+            <ul className="p-2 bg-base-100 ">
               {header.links.map((link, i) => (
                 <HeaderLink key={i} {...link} />
               ))}

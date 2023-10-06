@@ -3,40 +3,9 @@ import Classroom from "components/dashboard/classroom";
 import useClassrooms from "hooks/useClassrooms";
 import Link from "next/link";
 import { HiPlusCircle } from "react-icons/hi";
-import { AreaChart } from "@tremor/react";
-import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
-import { useEffect, useState } from "react";
 
 export default function DashboardPage() {
   const { classrooms, loading } = useClassrooms();
-  const supabase = createClientComponentClient<Database>();
-  const [data, setData] =
-    useState<Database["public"]["Tables"]["history"]["Row"][]>();
-
-  useEffect(() => {
-    const fetchHistoric = async () => {
-      const { data, error } = await supabase.from("history").select();
-      const formattedData =
-        [] as Database["public"]["Tables"]["history"]["Row"][];
-      data?.map((d) =>
-        d.updated_at
-          ? formattedData.push({
-              ...d,
-              updated_at: new Intl.DateTimeFormat("es-AR", {
-                dateStyle: "medium",
-                timeStyle: "medium",
-              }).format(new Date(d.updated_at)),
-            })
-          : null,
-      );
-      data ? setData(formattedData) : null;
-    };
-    fetchHistoric();
-  }, []);
-
-  const dataFormatter = (number: number) => {
-    return Intl.NumberFormat("us").format(number).toString() + "db";
-  };
 
   return !loading ? (
     <>
@@ -55,25 +24,6 @@ export default function DashboardPage() {
             <HiPlusCircle className="text-4xl" />
           </Link>
         </div>
-      </section>
-      <section>
-        {data ? (
-          <AreaChart
-            className="h-72 mt-4"
-            data={data}
-            index="updated_at"
-            categories={[
-              "sensor1",
-              "sensor2",
-              "sensor3",
-              "sensor4",
-              "sensor5",
-              "sensor6",
-            ]}
-            colors={["rose", "pink", "indigo", "sky", "emerald", "amber"]}
-            valueFormatter={dataFormatter}
-          />
-        ) : null}
       </section>
     </>
   ) : (
