@@ -1,6 +1,6 @@
 "use client";
 
-import { fetchClassroomData, suscribeToSingleChanges } from "@/utils/supabase";
+import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 import { useEffect, useState } from "react";
 import { Classroom } from "./useClassrooms";
 
@@ -19,12 +19,43 @@ export default function useClassroom(id: string) {
     active: false,
   });
 
+  const supabase = createClientComponentClient<Database>();
+
+  const fetchClassroomData = async (id: string) => {
+    const { data } = await supabase.from("device").select("*").eq("id", id);
+    data ? setClassroom(data[0]) : null;
+    console.log(data);
+  };
+
   useEffect(() => {
-    fetchClassroomData(id, setClassroom);
+    fetchClassroomData(id);
   }, [id]);
 
   useEffect(() => {
-    suscribeToSingleChanges(id, setClassroom);
+    const suscribeToSingleChanges = () => {
+      const filter = `id=eq.${id}`;
+      const channel = supabase
+        .channel("schema-db-changes")
+        .on(
+          "postgres_changes",
+          {
+            event: "*",
+            schema: "public",
+            table: "device",
+            filter,
+          },
+          (payload) => {
+            const updatedDevice = payload.new as Classroom;
+            setClassroom(updatedDevice);
+          },
+        )
+        .subscribe();
+
+      return () => {
+        channel.unsubscribe();
+      };
+    };
+    suscribeToSingleChanges();
   }, [id]);
 
   useEffect(() => {

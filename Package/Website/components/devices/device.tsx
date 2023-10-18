@@ -6,7 +6,13 @@ import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
 import Sensors from "./sensors";
 
-const device = ({ data }: { data: Classroom }) => {
+const device = ({
+  data,
+  showLink,
+}: {
+  data: Classroom;
+  showLink?: boolean;
+}) => {
   return (
     <DndProvider backend={HTML5Backend}>
       <div className="flex flex-col items-center">
@@ -21,7 +27,9 @@ const device = ({ data }: { data: Classroom }) => {
           ]}
         />
         <strong className="text-base-content mt-2">{data.classroom}</strong>
-        <Link href={`/dashboard/devices/${data.id}`}>Detalles</Link>
+        {showLink ? (
+          <Link href={`/dashboard/devices/${data.id}`}>Detalles</Link>
+        ) : null}
       </div>
     </DndProvider>
   );

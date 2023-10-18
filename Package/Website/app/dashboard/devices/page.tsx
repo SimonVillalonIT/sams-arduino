@@ -11,7 +11,7 @@ const page = () => {
       </h1>
       <div className="flex justify-center">
         <div className="flex flex-wrap gap-4 w-fit m-auto">
-          {classrooms?.map((c) => <Device data={c} />)}
+          {classrooms?.map((c) => <Device showLink={true} data={c} />)}
         </div>
       </div>
     </section>

@@ -1,6 +1,4 @@
-import { Classroom } from "@/hooks/useClassrooms";
 import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
-import { Dispatch, SetStateAction } from "react";
 
 const supabase = createClientComponentClient<Database>();
 
@@ -39,93 +37,79 @@ export const insertNotification = async (
   }
 };
 
-export const suscribeToSingleChanges = (
-  id: string,
-  setClassroom: (c: Classroom) => void,
-) => {
-  const filter = `id=${id}`;
-  const channel = supabase
-    .channel("schema-db-changes")
-    .on(
-      "postgres_changes",
-      {
-        event: "*",
-        schema: "public",
-        table: "device",
-        filter,
-      },
-      (payload) => {
-        const updatedDevice = payload.new as ClassroomTable;
-        setClassroom(updatedDevice);
-      },
-    )
-    .subscribe();
+export function getAverages(array: any) {
+  const averages = [];
+  let subArray: any = [];
+  let pastTime: any = null;
+  let counter = 0;
 
-  return () => {
-    channel.unsubscribe();
-  };
-};
-
-export const suscribeToMultipleChanges = (
-  ids: string[],
-  classrooms: Classroom[],
-  setClassrooms: (c: Classroom[]) => void,
-) => {
-  if (ids?.length === 0) return;
-  const filter = `id=in.(${ids?.join(",")})`;
-  const channel = supabase
-    .channel("schema-db-changes")
-    .on(
-      "postgres_changes",
-      {
-        event: "*",
-        schema: "public",
-        table: "device",
-        filter,
-      },
-      (payload) => {
-        const updatedDevice = payload.new as ClassroomTable;
-        const oldClassrooms = classrooms?.filter(
-          (c) => c.id !== updatedDevice.id,
-        );
-        setClassrooms([
-          ...(oldClassrooms as []),
-          { ...updatedDevice, active: true },
-        ]);
-      },
-    )
-    .subscribe();
-
-  return () => {
-    channel.unsubscribe();
-  };
-};
-
-export const fetchClassroomData = async (
-  id: string,
-  setClassroom: (c: Classroom) => void,
-) => {
-  const { data } = await supabase.from("device").select("*").eq("id", id);
-  data ? setClassroom(data[0]) : null;
-};
-
-export const fetchClassroomsData = async (
-  setLoading: Dispatch<SetStateAction<boolean>>,
-  setClassrooms: (c: Classroom[]) => void,
-  setIds: Dispatch<SetStateAction<string[]>>,
-) => {
-  const userId = (await getUserId()) as string;
-  const { data, error } = await supabase.rpc("get_devices_by_user_id", {
-    id_user: userId,
+  array.forEach((device: any) => {
+    const actualTime = new Date(device.updated_at).getTime();
+    if (!actualTime) return;
+    else if (
+      subArray.length === 0 ||
+      counter >= 10 ||
+      (pastTime && actualTime - pastTime > 600000)
+    ) {
+      // 600000 milisegundos = 10 minutos
+      if (subArray.length > 0) {
+        const average = getSensorsAverage(subArray);
+        averages.push({
+          id: device.id,
+          id_device: device.id_device,
+          sensor1: average[0],
+          sensor2: average[1],
+          sensor3: average[2],
+          sensor4: average[3],
+          sensor5: average[4],
+          sensor6: average[5],
+          updated_at: device.updated_at,
+        });
+      }
+      subArray = [];
+      counter = 0;
+    }
+    const values = [
+      device.sensor1,
+      device.sensor2,
+      device.sensor3,
+      device.sensor4,
+      device.sensor5,
+      device.sensor6,
+    ];
+    subArray.push(values);
+    counter++;
+    pastTime = actualTime;
   });
-  if (error) {
-    console.error(error);
-    setLoading(false);
-  } else {
-    const devices: Classroom[] = data as unknown as Classroom[];
-    if (devices) setClassrooms(devices.map((c) => ({ ...c, active: false })));
-    else return null;
-    setIds(devices ? devices.map((c) => c.id) : []);
-    setLoading(false);
+
+  if (subArray.length > 0) {
+    const average = getSensorsAverage(subArray);
+    averages.push({
+      id: array[array.length - 1].id,
+      id_device: array[array.length - 1].id_device,
+      sensor1: average[0],
+      sensor2: average[1],
+      sensor3: average[2],
+      sensor4: average[3],
+      sensor5: average[4],
+      sensor6: average[5],
+      updated_at: array[array.length - 1].updated_at,
+    });
   }
-};
+
+  return averages;
+}
+
+function getSensorsAverage(subArray: any) {
+  const average = Array(6).fill(null);
+
+  for (let i = 0; i < 6; i++) {
+    const temp = subArray.reduce(
+      (total: any, values: any) => total + values[i],
+      0,
+    );
+    average[i] = temp / subArray.length;
+  }
+
+  return average;
+}

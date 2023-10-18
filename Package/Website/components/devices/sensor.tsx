@@ -2,6 +2,7 @@
 import type { Identifier, XYCoord } from "dnd-core";
 import { useRef } from "react";
 import { useDrag, useDrop } from "react-dnd";
+import { HiExclamation } from "react-icons/hi";
 
 const ItemTypes = {
   CARD: "card",
@@ -86,15 +87,17 @@ const Card = ({ id, value, index, moveCard }: CardProps) => {
         className={`flex justify-center items-center ${
           opacity === 1 ? "opacity-100" : "opacity-0"
         } w-full ${
-          value <= 45
+          value === 0
+            ? "text-warning bg-error/30"
+            : value > 0 && value < 45
             ? "bg-success/90"
-            : value > 45 && value <= 90
+            : value >= 45 && value < 90
             ? "bg-warning/90"
             : "bg-error/90"
         } border border-base-200 text-primary-content select-none`}
         data-handler-id={handlerId}
       >
-        {value}
+        {value === 0 ? <HiExclamation /> : value}
       </div>
     </>
   );

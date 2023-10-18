@@ -4,7 +4,7 @@ import { Classroom } from "hooks/useClassrooms";
 import { BiHappyAlt, BiConfused, BiDizzy } from "react-icons/bi";
 import Dropdown from "./dropdown";
 import DropdownItem from "./dropdown-item";
-import { HiShare, HiTrash } from "react-icons/hi";
+import { HiShare, HiTrash, HiChartBar } from "react-icons/hi";
 import Modal from "./modal";
 import React, { useState } from "react";
 import InputSearch from "./input-search";
@@ -70,7 +70,12 @@ const Classroom = ({
           icon={HiTrash}
           onClick={() => deleteClassroom(id)}
         />
-        <DropdownItem text="Compartir" onClick={toggleModal} icon={HiShare} />
+        <DropdownItem text="Compartir" icon={HiShare} onClick={toggleModal} />
+        <DropdownItem
+          text="Ver Detalles"
+          icon={HiChartBar}
+          href={`/dashboard/devices/${id}`}
+        />
       </Dropdown>
       <Modal setState={toggleModal} state={showModal}>
         <p className="text-center mb-4">Comparte el aula</p>
