@@ -1,6 +1,5 @@
 import useModal from "@/hooks/useModal";
 import useclassroomStore from "@/store/classroomStore";
-import { Classroom } from "hooks/useClassrooms";
 import { BiHappyAlt, BiConfused, BiDizzy } from "react-icons/bi";
 import Dropdown from "./dropdown";
 import DropdownItem from "./dropdown-item";
@@ -20,7 +19,7 @@ const Classroom = ({
   sensor6,
   active,
   id,
-}: Classroom) => {
+}: ClassroomTable) => {
   const levels = [
     sensor1 ? sensor1 : 0,
     sensor2 ? sensor2 : 0,

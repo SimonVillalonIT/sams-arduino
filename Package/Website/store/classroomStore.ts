@@ -1,13 +1,12 @@
 import { deleteClassroom } from "@/utils/supabase";
-import { Classroom } from "hooks/useClassrooms";
 import { create } from "zustand";
 
 interface Store {
-  classrooms: Classroom[];
+  classrooms: ClassroomTable[];
 }
 
 interface Actions {
-  setClassrooms: (c: Classroom[]) => void;
+  setClassrooms: (c: ClassroomTable[]) => void;
   deleteClassroom: (id: string) => void;
 }
 

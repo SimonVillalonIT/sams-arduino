@@ -1,5 +1,4 @@
 "use client";
-import { Classroom } from "@/hooks/useClassrooms";
 import Link from "next/link";
 import React from "react";
 import { DndProvider } from "react-dnd";
@@ -10,7 +9,7 @@ const device = ({
   data,
   showLink,
 }: {
-  data: Classroom;
+  data: ClassroomTable;
   showLink?: boolean;
 }) => {
   return (
