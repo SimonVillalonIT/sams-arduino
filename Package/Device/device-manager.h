@@ -1,5 +1,5 @@
-#ifndef device-manager_h
-#define device-manager_h
+#ifndef DeviceManager_H
+#define DeviceManager_H
 
 #include <ArduinoJson.h>
 #include <HTTPClient.h>
@@ -9,15 +9,15 @@
 
 class DeviceManager {
 public:
+  String deviceId;
   DeviceManager(String SUPABASE_URL, String SUPABASE_TOKEN);
   void assignDeviceId();
   bool saveDeviceId();
+  void fsInit();
 
 private:
-  String deviceId;
   String SUPABASE_URL;
   String SUPABASE_TOKEN;
 };
 
 #endif
-

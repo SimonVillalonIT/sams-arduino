@@ -88,3 +88,18 @@ file.close();
 return true;
 }
 
+void DeviceManager::fsInit() {
+  /* Inicializar LittleFS normalmente. Si falla,
+    intentar hacerlo con autoformateo */
+  if (LittleFS.begin()) {
+    Serial.println("Filesystem successfully initialized.");
+    return;
+  };
+
+  if (LittleFS.begin(true)) {
+    Serial.println("Filesystem successfully initialized with autoformat.");
+    return;
+  };
+
+  Serial.println("Coulnd not initialize the filesystem.");
+}
