@@ -7,7 +7,7 @@ class SensorManager {
 public:
   SensorManager();
   void readSensors();
-  void sendSensorData(String deviceId, String SUPABASE_URL, String SUPABASE_TOKEN);
+  void sendSensorData(HTTPClient& client,String& deviceId, String& SUPABASE_URL, String& SUPABASE_TOKEN);
 private:
   int sensorData[6];
 };

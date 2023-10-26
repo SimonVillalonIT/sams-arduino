@@ -1,5 +1,6 @@
 #include <WiFi.h>
 #include <ESPAsyncWebSrv.h>
+#include <HTTPClient.h>
 #include "secrets.h"
 #include "sensor-manager.h"
 #include "device-manager.h"
@@ -14,7 +15,7 @@ AsyncWebServer server(80);
 WiFiManager wifiManager;
 DeviceManager deviceManager(SUPABASE_URL, SUPABASE_TOKEN);
 SensorManager sensorManager;
-
+HTTPClient client ;
 
 void handleServerRootRoute(AsyncWebServerRequest *request) {
   Serial.printf("[WebServer]: GET / @%s\n", request->client()->remoteIP().toString().c_str());
@@ -322,6 +323,6 @@ void loop() {
   }
 
   sensorManager.readSensors();
-  sensorManager.sendSensorData(deviceManager.deviceId, SUPABASE_URL, SUPABASE_TOKEN);
+  sensorManager.sendSensorData(client, deviceManager.deviceId, SUPABASE_URL, SUPABASE_TOKEN);
   delay(10000);
 }
