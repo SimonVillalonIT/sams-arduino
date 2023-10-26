@@ -1,6 +1,7 @@
 #ifndef wifi-manager_h
 #define wifi-manager_h
 
+#include <ESPAsyncWebSrv.h>
 #include <ArduinoJson.h>
 #include <LittleFS.h>
 #include <WiFi.h>
@@ -13,7 +14,7 @@ public:
   void init();
   bool connect(String ssid, String password);
   bool saveCredentials();
-
+  bool detect(AsyncWebServerRequest *request);
 private:
   String ssid;
   String password;

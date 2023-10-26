@@ -5,6 +5,22 @@ WiFiManager::WiFiManager() {
   this->password = password;
 }
 
+bool WiFiManager::detect(AsyncWebServerRequest *request) {
+    // Initialize a variable to store the number of networks found
+    int n = 0;
+
+    // Try to scan for networks and handle exceptions
+    try {
+        n = WiFi.scanNetworks();
+    } catch (const std::exception &e) {
+        // Handle the exception, such as printing an error message
+        Serial.println("Exception during network scan: " + String(e.what()));
+    }
+
+    // Print the number of networks found
+    Serial.println("Number of networks found: " + String(n));
+}
+
 bool WiFiManager::connect(String ssid , String password ) {
 Serial.printf("Establishing WiFi connection to '%s'...\n", ssid.c_str());
 
