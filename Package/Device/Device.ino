@@ -1,21 +1,185 @@
+#include <LittleFS.h>
+#include <ArduinoJson.h>
 #include <WiFi.h>
-#include <ESPAsyncWebSrv.h>
 #include <HTTPClient.h>
+#include <ESPAsyncWebSrv.h>
+
 #include "secrets.h"
-#include "sensor-manager.h"
-#include "device-manager.h"
-#include "wifi-manager.h"
 
 #define WIFI_TIMEOUT 5000  // ms
-#define AP_SSID "sams board"
-#define AP_PASSWORD "password1"
-#define RESTART_DELAY 5000  // ms
 
+#define AP_SSID "Sams"
+#define AP_PASSWORD "12345678"
+
+#define RESTART_DELAY 5000            // ms
+#define FAILED_REQUEST_TIMEOUT 60000  // ms
+
+String deviceId;
+HTTPClient httpClient;
 AsyncWebServer server(80);
-WiFiManager wifiManager;
-DeviceManager deviceManager(SUPABASE_URL, SUPABASE_TOKEN);
-SensorManager sensorManager;
-HTTPClient client ;
+DynamicJsonDocument device(1024);
+
+void fsInit() {
+  /* Inicializar LittleFS normalmente. Si falla,
+    intentar hacerlo con autoformateo */
+  if (LittleFS.begin()) {
+    Serial.println("Filesystem successfully initialized.");
+    return;
+  };
+
+  if (LittleFS.begin(true)) {
+    Serial.println("Filesystem successfully initialized with autoformat.");
+    return;
+  };
+
+  Serial.println("Coulnd not initialize the filesystem.");
+}
+
+bool wifiConnect(String ssid, String password) {
+  Serial.printf("Establishing WiFi connection to '%s'...\n", ssid.c_str());
+
+  WiFi.begin(ssid, password);
+
+  unsigned long startTime = millis();
+  while (millis() - startTime < WIFI_TIMEOUT) {
+    if (WiFi.status() == WL_CONNECTED) {
+      Serial.println("WiFi connection established.");
+      return true;
+    };
+
+    delay(100);
+  }
+
+  Serial.println("Could not establish WiFi connection.");
+  return false;
+}
+
+void wifiInit() {
+  Serial.println("Initializing WiFi connection...");
+
+  File file = LittleFS.open("/wifi.json");
+  if (!file) {
+    Serial.println("There were no saved WiFi credentials.");
+    return;
+  }
+
+  DynamicJsonDocument doc(512);
+  DeserializationError error = deserializeJson(doc, file);
+  file.close();
+  if (error) {
+    Serial.println("There was an error trying to deserialize the WiFi credentials.");
+    return;
+  }
+
+  wifiConnect(doc["ssid"].as<String>(), doc["password"].as<String>());
+}
+
+bool wifiSave(String ssid, String password) {
+  Serial.println("Saving WiFi credentials...");
+
+  File file = LittleFS.open("/wifi.json", "w+");
+  if (!file) {
+    Serial.println("There was an error trying open the WiFi credentials file.");
+    return false;
+  }
+
+  DynamicJsonDocument doc(512);
+  doc["ssid"] = ssid;
+  doc["password"] = password;
+  bool dumped = serializeJson(doc, file);
+  if (dumped) {
+    Serial.println("WiFi credentials saved successfully.");
+  } else {
+    Serial.println("There was an error trying to save the WiFi credentials.");
+  }
+
+  file.close();
+  return dumped;
+}
+
+bool saveDeviceId() {
+  Serial.println("Saving device id...");
+
+  File file = LittleFS.open("/deviceId.txt", "w+");
+  if (!file) {
+    Serial.println("There was an error trying open the device id file.");
+    return false;
+  }
+
+  file.print(deviceId);
+  file.close();
+
+  return true;
+}
+void assignBoardId() {
+
+  Serial.println("Getting device id...");
+
+  File file = LittleFS.open("/deviceId.txt");
+  if (file && file.size() > 0) {
+    deviceId = file.readStringUntil('\n');
+    file.close();
+
+    Serial.printf("Device id: '%s'.\n", deviceId.c_str());
+    return;
+  }
+
+
+  HTTPClient http;
+  String url = SUPABASE_URL + "/rest/v1/rpc/insert_device_and_return_id";
+
+  http.begin(url);
+  http.addHeader("Authorization", "Bearer " + SUPABASE_TOKEN);
+  http.addHeader("apikey", SUPABASE_TOKEN);
+  http.addHeader("Accept", "application/json");
+
+
+  int httpResponseCode = http.POST("{}");
+
+  if (httpResponseCode == 200) {
+    String response = http.getString();
+    Serial.println("Response: " + response);
+
+    // Parse JSON response
+    StaticJsonDocument<256> jsonDocument;
+    DeserializationError error = deserializeJson(jsonDocument, response);
+
+    if (error) {
+      Serial.println("Error parsing JSON.");
+      return;
+    }
+
+    // Extract "id" value
+    JsonArray idArray = jsonDocument.as<JsonArray>();
+    JsonObject idObject = idArray[0];
+    deviceId = idObject["id"].as<String>();
+
+    Serial.println("Device ID: " + deviceId);
+  } else {
+    Serial.print("Error code: ");
+    Serial.println(httpResponseCode);
+  }
+
+  http.end();
+
+  if (!deviceId) {
+    Serial.println("There was an error trying to generate the device id.");
+    return;
+  }
+
+  bool saved = saveDeviceId();
+  if (saved) {
+    Serial.println("Device id saved successfully.");
+    return;
+  }
+
+  /* Error fatal ya que no se pudo guardar el id del dispositivo.
+    Se reinicia el dispositivo completamente */
+  Serial.println("There was a fatal error trying to save the device id.");
+  Serial.printf("Restarting device in %dms...\n", RESTART_DELAY);
+  delay(RESTART_DELAY);
+  ESP.restart();
+}
 
 void handleServerRootRoute(AsyncWebServerRequest *request) {
   Serial.printf("[WebServer]: GET / @%s\n", request->client()->remoteIP().toString().c_str());
@@ -185,7 +349,7 @@ void handleServerRootRoute(AsyncWebServerRequest *request) {
     <section>
         <div class="form-box">
             )";
-  rootHTML += "<span class='id'>'" + deviceManager.deviceId + "'</span>";
+  rootHTML += "<span class='id'>'" + deviceId + "'</span>";
   rootHTML += R"(
             <div class="form-value">
                 <form action="/wifi" method="POST">
@@ -266,21 +430,31 @@ void handleServerWifiRoute(AsyncWebServerRequest *request) {
   String ssid = request->getParam("ssid", true)->value();
   String password = request->getParam("password", true)->value();
 
-  bool connected = wifiManager.connect(ssid, password);
+  bool connected = wifiConnect(ssid, password);
   if (!connected) {
     return request->send(401, "text/plain", "Invalid WiFi credentials.");
   }
 
-  bool saved = wifiManager.saveCredentials();
+  bool saved = wifiSave(ssid, password);
   if (!saved) {
-    return request->send(500, "text/plain", "Hubo un error en interno, por favor intente nuevamente.");
+    return request->send(500, "text/plain", "There was an internal server error trying to save the WiFi credentials.");
   }
 
-  request->send(200, "text/plain", "WiFi exitosamente guardado y conectado. Vuelve atrás para ver el ID del dispositivo.");
+  request->send(200, "text/plain", "WiFi successfully connected and saved.");
 }
 
 void setup() {
   Serial.begin(115200);
+
+  // Inicializar sistema de archivos
+  fsInit();
+
+  // Inicializar WiFi desde el archivo guardado
+  wifiInit();
+
+  // Obtener el id del dispositivo
+  assignBoardId();
+
   int numNetworks = WiFi.scanNetworks();
 
   // Create a JSON object to store the network names
@@ -297,32 +471,68 @@ void setup() {
   serializeJson(jsonDocument, jsonResponse);
 
   WiFi.softAP(AP_SSID, AP_PASSWORD);
+
   server.on("/", HTTP_GET, handleServerRootRoute);
   server.on("/wifi", HTTP_POST, handleServerWifiRoute);
-  server.on("/detect", HTTP_GET, [jsonResponse](AsyncWebServerRequest *request){
+  server.on("/detect", HTTP_GET, [jsonResponse](AsyncWebServerRequest *request) {
     request->send(200, "application/json", jsonResponse);
   });
 
   server.begin();
-
-  deviceManager.fsInit();
-
-  wifiManager.init();
-  deviceManager.assignDeviceId();
 }
 
 void loop() {
+  // Esperar hasta que tenga conexión WiFi
   if (WiFi.status() != WL_CONNECTED) {
     delay(100);
     return;
   }
 
-  if (deviceManager.deviceId.isEmpty()) {
-    deviceManager.assignDeviceId();
+  // Si no tengo la id del dispositivo, la obtengo
+  if (deviceId.isEmpty()) {
+    assignBoardId();
     return;
   }
 
-  sensorManager.readSensors();
-  sensorManager.sendSensorData(client, deviceManager.deviceId, SUPABASE_URL, SUPABASE_TOKEN);
-  delay(10000);
+  // Example array of sensor data
+  int sensorData[] = { random(500), random(500), random(500), random(500), random(500), random(500) };
+  Serial.println(random(500));
+  // Initialize the HTTP client
+  HTTPClient client;
+
+  // Iterate over the array and send each element to the backend
+
+  String jsonPayload = "{\"deviceid\":\"" + deviceId + "\",";
+  jsonPayload += "\"sensor1\":" + String(sensorData[0]) + ",";
+  jsonPayload += "\"sensor2\":" + String(sensorData[1]) + ",";
+  jsonPayload += "\"sensor3\":" + String(sensorData[2]) + ",";
+  jsonPayload += "\"sensor4\":" + String(sensorData[3]) + ",";
+  jsonPayload += "\"sensor5\":" + String(sensorData[4]) + ",";
+  jsonPayload += "\"sensor6\":" + String(sensorData[5]);
+  jsonPayload += "}";
+
+  // Begin the HTTP request
+  client.begin(SUPABASE_URL + "/rest/v1/rpc/handle_sensor");
+  client.addHeader("Authorization", "Bearer " + SUPABASE_TOKEN);
+  client.addHeader("apikey", SUPABASE_TOKEN);
+  client.addHeader("Content-Type", "application/json");
+
+  // Send the POST request
+  int httpResponseCode = client.POST(jsonPayload);
+
+  // Check the response code
+  if (httpResponseCode > 0) {
+    Serial.print("Request ");
+    Serial.print(" - Response code: ");
+    Serial.println(httpResponseCode);
+  } else {
+    Serial.print("Request ");
+    Serial.print(" - Response code: ");
+    Serial.println(httpResponseCode);
+  }
+
+  // End the HTTP request
+  client.end();
+
+  delay(20000);
 }
