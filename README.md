@@ -1,4 +1,3 @@
-# sams-arduino
+# sams-arduino v1
 
-## **Deployment**
-https://sams-arduino.vercel.app/
+#DEPRECATED
